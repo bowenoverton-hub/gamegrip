@@ -86,16 +86,17 @@
     <nav class="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="flex items-center gap-2">
+                <div class="flex items-center gap-2">
                     <!-- Target Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                     <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
-                </a>
+                </div>
                 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#process" class="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
                     <a href="#faq" class="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
+                    <a href="#contact" class="text-sm font-medium hover:text-green-400 transition-colors">Contact</a>
                     
                     <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors p-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
@@ -127,6 +128,7 @@
                 <a href="#process" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
                 <a href="product_details.html" class="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
                 <a href="#faq" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">FAQ</a>
+                <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">Contact</a>
             </div>
         </div>
     </nav>
@@ -248,22 +250,23 @@
         </div>
     </section>
 
-    <!-- Team Orders Section -->
-    <section class="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
+    <!-- Contact & Custom Orders Section -->
+    <section id="contact" class="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-block p-3 rounded-full bg-neutral-800/50 mb-6">
+                <!-- Message Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Coach or Equipment Manager?</h2>
-            <p class="text-xl text-neutral-400 mb-8">If you need 6+ balls for your QB room, I offer a bulk discount. I will personally make sure every ball in the set matches perfectly.</p>
-            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); alert('Email feature coming soon!');">
+            <h2 class="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Contact & Custom Orders</h2>
+            <p class="text-xl text-neutral-400 mb-8">Need a bulk discount for your team (6+ balls)? Have a general question about my process? Send me a message directly.</p>
+            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); alert('Message sent! I will get back to you shortly.');">
                  <div class="grid grid-cols-2 gap-4">
                    <input type="text" placeholder="Full Name" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
                    <input type="email" placeholder="Email Address" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
                  </div>
-                 <textarea placeholder="Tell me what you need (e.g. 12 GST Primes for Varsity)" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 h-24 transition-colors"></textarea>
+                 <textarea placeholder="How can I help? (e.g. Team Quote, Shipping Question, Process Detail...)" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 h-32 transition-colors"></textarea>
                  <button class="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white font-bold uppercase py-3 rounded-sm transition-all">
-                   Email Me
+                   Send Message
                  </button>
             </form>
         </div>
@@ -293,9 +296,9 @@
                 </div>
                 
                 <div class="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
-                    <a href="#" class="hover:text-green-400 transition-colors">Team Orders</a>
-                    <a href="#" class="hover:text-green-400 transition-colors">Shipping</a>
-                    <a href="#" class="hover:text-green-400 transition-colors">Contact</a>
+                    <a href="#contact" class="hover:text-green-400 transition-colors">Team Orders</a>
+                    <a href="#shop" class="hover:text-green-400 transition-colors">Shop</a>
+                    <a href="#contact" class="hover:text-green-400 transition-colors">Contact</a>
                 </div>
             </div>
             
@@ -312,6 +315,7 @@
 
     <script>
         // --- Data ---
+        // Consistent with product_details.html
         const products = [
             {
                 id: 1,
@@ -337,7 +341,7 @@
 
         // --- Initialization ---
         document.getElementById('year').textContent = new Date().getFullYear();
-        loadCart(); // Load from localStorage on page load
+        loadCart(); // Load local storage cart on init
         renderProducts();
         renderFaqs();
         renderCart();
@@ -439,7 +443,7 @@
             if (open) {
                 overlay.classList.add('open');
                 drawer.classList.add('open');
-                document.body.style.overflow = 'hidden'; // Prevent body scroll
+                document.body.style.overflow = 'hidden'; 
             } else {
                 overlay.classList.remove('open');
                 drawer.classList.remove('open');
@@ -536,3 +540,5 @@
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
     </script>
+</body>
+</html>
