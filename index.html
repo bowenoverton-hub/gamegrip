@@ -233,19 +233,57 @@
     <!-- Shop Section -->
     <section id="shop" class="py-24 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
-                    <p class="text-xl text-neutral-400">I keep a limited inventory of prepped balls in stock. Order now to ensure delivery for game day.</p>
-                </div>
-                <div class="mt-4 md:mt-0 flex items-center gap-2 text-green-400 font-medium bg-neutral-800/50 px-4 py-2 rounded-full border border-neutral-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                    Wilson GST Prime
-                </div>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
+                <p class="text-xl text-neutral-400 max-w-2xl mx-auto">I keep a limited inventory of prepped balls in stock. Order now to ensure delivery for game day.</p>
             </div>
 
             <div class="flex flex-wrap justify-center gap-8" id="product-grid">
                 <!-- Products injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Send In Your Ball Service Section -->
+    <section id="send-in" class="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-neutral-800/30 border border-neutral-700/50 rounded-sm p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                <div class="flex-1 space-y-6">
+                    <div class="inline-flex items-center gap-2 text-green-400 font-bold uppercase text-sm tracking-wider">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        Mail-In Service
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white uppercase tracking-tight">Already Have A Ball?</h2>
+                    <p class="text-xl text-neutral-400 leading-relaxed">
+                        Don't let a good ball go to waste. Send in your new or lightly used <strong>Wilson</strong> or <strong>Big Game</strong> footballs, and I will apply the full GameGrip conditioning process to them.
+                    </p>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            Full Prime/Condition/Texture/Mud process
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            2-3 day turnaround time
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <strong>$75.00</strong> per ball (You pay shipping)
+                        </li>
+                    </ul>
+                    <button onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => { document.querySelector('textarea').value = 'I want to send in my own ball for conditioning.'; }, 500);" class="inline-block bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-8 py-4 font-bold uppercase text-lg transition-colors rounded-sm shadow-sm mt-4">
+                        Start Order
+                    </button>
+                </div>
+                <div class="flex-1 w-full flex justify-center">
+                    <div class="relative w-full max-w-sm aspect-square bg-neutral-800/50 rounded-sm border border-neutral-700/50 flex items-center justify-center group overflow-hidden">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-neutral-700 group-hover:text-green-500/50 transition-colors duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                         <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/80 to-transparent"></div>
+                         <div class="absolute bottom-6 left-0 right-0 text-center">
+                             <span class="text-neutral-500 text-sm uppercase tracking-widest font-bold">Mail-In Lab</span>
+                         </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
