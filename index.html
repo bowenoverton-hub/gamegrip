@@ -74,7 +74,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
              </div>
              <p class="text-neutral-400 text-lg">Your cart is empty.</p>
-             <button onclick="toggleCart(false); scrollToSection('shop')" class="mt-4 text-green-500 font-bold hover:text-green-400">
+             <button onclick="toggleCart(false); document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });" class="mt-4 text-green-500 font-bold hover:text-green-400">
                 Start Shopping
              </button>
         </div>
@@ -84,11 +84,11 @@
     <nav class="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-2">
+                <a href="index.html" class="flex items-center gap-2">
                     <!-- Target Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                     <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
-                </div>
+                </a>
                 
                 <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-8">
@@ -100,9 +100,9 @@
                         <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
                     </button>
 
-                    <button onclick="scrollToSection('shop')" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-sm font-bold uppercase text-sm transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                    <a href="product_details.html" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-sm font-bold uppercase text-sm transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
                         Shop Now
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -123,7 +123,7 @@
         <div id="mobile-menu" class="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800 mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#process" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
-                <a href="#shop" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
+                <a href="product_details.html" class="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
                 <a href="#faq" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">FAQ</a>
             </div>
         </div>
@@ -150,9 +150,9 @@
                 <strong class="text-white font-semibold">Certified materials. Flawless execution. Just perfection.</strong>
             </p>
             <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                <button onclick="scrollToSection('shop')" class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
+                <a href="product_details.html" class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
                     Shop Now <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
+                </a>
                 <a href="#process" class="bg-neutral-800/50 backdrop-blur-sm border-2 border-neutral-700 hover:border-green-400 hover:text-green-400 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center">
                     How It Works
                 </a>
@@ -313,17 +313,10 @@
         const products = [
             {
                 id: 1,
-                name: 'Wilson GST Prime',
+                name: 'The GameGrip Elite',
                 price: 150.00,
                 image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
-                description: 'The gold standard. Hand-prepped with our Elite process for instant game-readiness.'
-            },
-            {
-                id: 2,
-                name: 'Big Game 1905',
-                price: 150.00,
-                image: 'https://images.unsplash.com/photo-1628891435222-06592209d730?auto=format&fit=crop&q=80&w=600',
-                description: 'Premium American leather. Treated to perfection for maximum texture and control.'
+                description: 'The ultimate game ball. A Wilson GST Prime treated with my proprietary process for instant game-readiness.'
             }
         ];
 
@@ -331,7 +324,7 @@
             { q: "Do you use factory 'tack' sprays?", a: "Absolutely not. I brush the factory wax and use organic conditioners and specific river mud. The grip comes from the leather texture, not a cheap sticky spray." },
             { q: "How long does shipping take?", a: "I keep a small inventory of prepped balls ready to ship. If it's in stock, it ships within 24 hours. Custom team orders take 3-5 days." },
             { q: "Will this pass pre-game inspection?", a: "Yes. My process creates a natural, seasoned look and feel. I do not use illegal adhesives or foreign substances." },
-            { q: "What brands do you work on?", a: "I specialize in Big Game USA and Wilson balls. I only sell what I can perfect." }
+            { q: "What brands do you work on?", a: "I specialize in Big Game USA and Wilson balls. Currently, I sell the Wilson GST Prime as my main offering because I believe it is the best platform for my prep process." }
         ];
 
         // --- State ---
@@ -342,6 +335,7 @@
 
         // --- Initialization ---
         document.getElementById('year').textContent = new Date().getFullYear();
+        loadCart(); // Load local storage cart on init
         renderProducts();
         renderFaqs();
         renderCart();
@@ -351,17 +345,17 @@
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.map(product => `
-                <div class="w-full md:w-[350px] bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all">
-                    <div class="relative h-64 overflow-hidden">
+                <div class="w-full md:max-w-lg bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all cursor-pointer" onclick="window.location.href='product_details.html'">
+                    <div class="relative h-80 overflow-hidden">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <h3 class="text-2xl font-bold mb-2 uppercase text-white">${product.name}</h3>
-                        <p class="text-neutral-400 mb-4 text-sm">${product.description}</p>
-                        <div class="mt-auto pt-6 flex justify-between items-center border-t border-neutral-700/50">
-                            <span class="text-2xl font-black text-white">$${product.price.toFixed(2)}</span>
-                            <button onclick="addToCart(${product.id})" class="bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-4 py-2 font-bold uppercase text-sm transition-colors rounded-sm shadow-sm">
-                                Add to Cart
+                    <div class="p-8 flex-1 flex flex-col text-center">
+                        <h3 class="text-3xl font-bold mb-4 uppercase text-white">${product.name}</h3>
+                        <p class="text-neutral-400 mb-6 text-base leading-relaxed">${product.description}</p>
+                        <div class="mt-auto pt-6 flex flex-col items-center gap-4 border-t border-neutral-700/50 w-full">
+                            <span class="text-4xl font-black text-white">$${product.price.toFixed(2)}</span>
+                            <button class="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-8 py-4 font-bold uppercase text-lg transition-colors rounded-sm shadow-sm">
+                                View Details
                             </button>
                         </div>
                     </div>
@@ -391,6 +385,17 @@
 
         // --- Cart Logic ---
 
+        function loadCart() {
+            const savedCart = localStorage.getItem('gamegrip_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('gamegrip_cart', JSON.stringify(cart));
+        }
+
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             const existingItem = cart.find(item => item.id === productId);
@@ -401,12 +406,14 @@
                 cart.push({ ...product, quantity: 1 });
             }
             
+            saveCart();
             renderCart();
             toggleCart(true);
         }
 
         function removeFromCart(productId) {
             cart = cart.filter(item => item.id !== productId);
+            saveCart();
             renderCart();
         }
 
@@ -418,6 +425,7 @@
                 }
                 return item;
             });
+            saveCart();
             renderCart();
         }
 
@@ -429,7 +437,7 @@
             if (open) {
                 overlay.classList.add('open');
                 drawer.classList.add('open');
-                document.body.style.overflow = 'hidden'; // Prevent body scroll
+                document.body.style.overflow = 'hidden'; 
             } else {
                 overlay.classList.remove('open');
                 drawer.classList.remove('open');
@@ -448,16 +456,18 @@
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
             // Update Badges
-            badges.forEach(badge => {
-                if (count > 0) {
-                    badge.textContent = count;
-                    badge.classList.remove('hidden');
-                    badge.classList.add('flex');
-                } else {
-                    badge.classList.add('hidden');
-                    badge.classList.remove('flex');
-                }
-            });
+            if(badges[0]){
+                badges.forEach(badge => {
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.classList.remove('hidden');
+                        badge.classList.add('flex');
+                    } else {
+                        badge.classList.add('hidden');
+                        badge.classList.remove('flex');
+                    }
+                });
+            }
 
             if (cart.length === 0) {
                 cartItemsContainer.classList.add('hidden');
