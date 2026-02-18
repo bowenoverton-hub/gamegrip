@@ -83,8 +83,8 @@
     <nav class="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                <a href="index.html" class="flex items-center gap-3 hover:opacity-90 transition-opacity group">
+                    <img src="logo.png" alt="" class="h-10 w-auto object-contain transition-transform group-hover:scale-105">
                     <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
                 </a>
                 
@@ -180,15 +180,15 @@
     <footer class="bg-neutral-900/90 backdrop-blur-lg py-12 border-t border-neutral-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                <a href="index.html" class="flex items-center gap-3 hover:opacity-90 transition-opacity group">
+                    <img src="logo.png" alt="" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
                     <span class="font-bold text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
-                </div>
+                </a>
                 
                 <div class="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
-                    <a href="#" class="hover:text-green-400 transition-colors">Team Orders</a>
-                    <a href="#" class="hover:text-green-400 transition-colors">Shipping</a>
-                    <a href="#" class="hover:text-green-400 transition-colors">Contact</a>
+                    <a href="index.html#contact" class="hover:text-green-400 transition-colors">Team Orders</a>
+                    <a href="index.html#shop" class="hover:text-green-400 transition-colors">Shipping</a>
+                    <a href="index.html#contact" class="hover:text-green-400 transition-colors">Contact</a>
                 </div>
             </div>
             
@@ -205,7 +205,6 @@
 
     <script>
         // --- Data ---
-        // Same product ID as index.html to share cart state
         const product = {
             id: 1,
             name: 'The GameGrip Elite',
@@ -221,10 +220,10 @@
 
         // --- Initialization ---
         document.getElementById('year').textContent = new Date().getFullYear();
-        loadCart(); // Load from localStorage on page load
+        loadCart(); 
         renderCart();
 
-        // --- Cart Logic (Shared) ---
+        // --- Cart Logic ---
 
         function loadCart() {
             const savedCart = localStorage.getItem('gamegrip_cart');
@@ -238,15 +237,12 @@
         }
 
         function addToCart(productId) {
-            // Note: In this file we only have one product button usually, but keeping ID logic for consistency
             const existingItem = cart.find(item => item.id === productId);
-            
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
                 cart.push({ ...product, quantity: 1 });
             }
-            
             saveCart();
             renderCart();
             toggleCart(true);
@@ -274,7 +270,6 @@
             isCartOpen = open;
             const overlay = document.getElementById('cart-overlay');
             const drawer = document.getElementById('cart-drawer');
-            
             if (open) {
                 overlay.classList.add('open');
                 drawer.classList.add('open');
@@ -296,7 +291,6 @@
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            // Update Badges
             if(badges[0]) {
                 badges.forEach(badge => {
                     if (count > 0) {
@@ -330,7 +324,6 @@
                                 </button>
                             </div>
                             <p class="text-green-500 font-bold text-sm mb-3">$${item.price.toFixed(2)}</p>
-                            
                             <div class="flex items-center gap-3">
                                 <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
@@ -343,7 +336,6 @@
                         </div>
                     </div>
                 `).join('');
-                
                 cartTotalEl.textContent = `$${total.toFixed(2)}`;
             }
         }
@@ -357,7 +349,6 @@
             const menu = document.getElementById('mobile-menu');
             const menuIcon = document.getElementById('menu-icon');
             const closeIcon = document.getElementById('close-icon');
-
             if (isMenuOpen) {
                 menu.classList.add('open');
                 menuIcon.classList.add('hidden');
