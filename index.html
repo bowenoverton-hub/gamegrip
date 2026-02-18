@@ -208,7 +208,7 @@
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
                     <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">02</div>
                     <h4 class="text-lg font-bold text-white mb-2 uppercase">Condition</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">Deep penetration conditioning to darken the leather and improve longevity.</p>
+                    <p class="text-neutral-400 text-sm leading-relaxed">Rich conditioning to darken the leather and improve longevity.</p>
                 </div>
                 <!-- Step 3 -->
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
@@ -232,7 +232,7 @@
             <div class="flex flex-col md:flex-row justify-between items-end mb-12">
                 <div>
                     <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
-                    <p class="text-xl text-neutral-400">I keep a small batch of prepped balls in stock. Order now to ensure delivery for game day.</p>
+                    <p class="text-xl text-neutral-400">I keep a limited inventory of prepped balls in stock. Order now to ensure delivery for game day.</p>
                 </div>
                 <div class="mt-4 md:mt-0 flex items-center gap-2 text-green-400 font-medium bg-neutral-800/50 px-4 py-2 rounded-full border border-neutral-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -240,7 +240,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8" id="product-grid">
+            <div class="flex flex-wrap justify-center gap-8" id="product-grid">
                 <!-- Products injected via JS -->
             </div>
         </div>
@@ -313,24 +313,17 @@
         const products = [
             {
                 id: 1,
-                name: 'The "Varsity" Prep',
-                price: 85.00,
+                name: 'Wilson GST Prime',
+                price: 150.00,
                 image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
-                description: 'Standard break-in. Softened leather, reliable grip.'
+                description: 'The gold standard. Hand-prepped with our Elite process for instant game-readiness.'
             },
             {
                 id: 2,
-                name: 'The "Collegiate" Prime',
-                price: 110.00,
-                image: 'https://images.unsplash.com/photo-1587280501635-a19e2e60dcdd?auto=format&fit=crop&q=80&w=600',
-                description: 'Darker leather, higher tack. Elite Friday night performance.'
-            },
-            {
-                id: 3,
-                name: 'The "Pro" Cut',
-                price: 145.00,
+                name: 'Big Game 1905',
+                price: 150.00,
                 image: 'https://images.unsplash.com/photo-1628891435222-06592209d730?auto=format&fit=crop&q=80&w=600',
-                description: 'Maximum texture. Multi-stage mud treatment. The ultimate weapon.'
+                description: 'Premium American leather. Treated to perfection for maximum texture and control.'
             }
         ];
 
@@ -358,7 +351,7 @@
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.map(product => `
-                <div class="bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all">
+                <div class="w-full md:w-[350px] bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all">
                     <div class="relative h-64 overflow-hidden">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
