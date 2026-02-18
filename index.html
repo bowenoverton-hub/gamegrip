@@ -1,460 +1,535 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Menu, X, ShoppingCart, Star, ShieldCheck, 
-  Clock, Target, CheckCircle2, ChevronRight, Trophy,
-  HelpCircle, Mail, Trash2, Plus, Minus, User
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameGrip - Precision Football Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .selection-green::selection { background-color: #22c55e; color: white; }
+        
+        /* Custom scrollbar for cart */
+        .cart-scroll::-webkit-scrollbar { width: 6px; }
+        .cart-scroll::-webkit-scrollbar-track { background: #171717; }
+        .cart-scroll::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
+        
+        /* Drawer transitions */
+        .drawer-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+        .drawer-content { transform: translateX(100%); transition: transform 0.3s ease-out; }
+        .drawer-content.open { transform: translateX(0); }
+        
+        /* Mobile menu transition */
+        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
+        .mobile-menu.open { max-height: 300px; }
+        
+        /* Fade in animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-neutral-900 text-neutral-100 selection-green relative">
 
-export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeFaq, setActiveFaq] = useState(null);
-  
-  // Cart State
-  const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+    <!-- Background -->
+    <div class="fixed inset-0 z-[-1]">
+        <div class="absolute inset-0 bg-neutral-900"></div>
+        <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=2000" alt="Dark texture" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay">
+        <div class="absolute inset-0 bg-gradient-to-b from-neutral-900/80 via-neutral-900/70 to-neutral-950/90"></div>
+    </div>
 
-  const products = [
-    {
-      id: 1,
-      name: 'The "Varsity" Prep',
-      price: 85.00,
-      image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
-      description: 'Standard break-in. Softened leather, reliable grip.'
-    },
-    {
-      id: 2,
-      name: 'The "Collegiate" Prime',
-      price: 110.00,
-      image: 'https://images.unsplash.com/photo-1587280501635-a19e2e60dcdd?auto=format&fit=crop&q=80&w=600',
-      description: 'Darker leather, higher tack. Elite Friday night performance.'
-    },
-    {
-      id: 3,
-      name: 'The "Pro" Cut',
-      price: 145.00,
-      image: 'https://images.unsplash.com/photo-1628891435222-06592209d730?auto=format&fit=crop&q=80&w=600',
-      description: 'Maximum texture. Multi-stage mud treatment. The ultimate weapon.'
-    }
-  ];
-
-  const addToCart = (product) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
-      if (existingItem) {
-        return prevCart.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-  };
-
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
-  };
-
-  const updateQuantity = (productId, change) => {
-    setCart(prevCart => prevCart.map(item => {
-      if (item.id === productId) {
-        const newQuantity = item.quantity + change;
-        return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
-      }
-      return item;
-    }));
-  };
-
-  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  const toggleFaq = (index) => {
-    setActiveFaq(activeFaq === index ? null : index);
-  };
-
-  return (
-    <div className="min-h-screen text-neutral-100 font-sans selection:bg-green-500 selection:text-white relative scroll-smooth">
-      {/* Gray Industrial Background */}
-      <div className="fixed inset-0 z-[-1]">
-        <div className="absolute inset-0 bg-neutral-900"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=2000" 
-          alt="Dark texture" 
-          className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/80 via-neutral-900/70 to-neutral-950/90"></div>
-      </div>
-
-      {/* Cart Drawer */}
-      {isCartOpen && (
-        <>
-          <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
-            onClick={() => setIsCartOpen(false)}
-          />
-          <div className="fixed top-0 right-0 h-full w-full max-w-md bg-neutral-900 border-l border-neutral-800 z-[70] shadow-2xl flex flex-col transform transition-transform duration-300 ease-out">
-            <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-900/95 backdrop-blur-md">
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-green-500" /> Your Cart
-              </h2>
-              <button 
-                onClick={() => setIsCartOpen(false)}
-                className="text-neutral-400 hover:text-white transition-colors"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {cart.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <ShoppingCart className="h-8 w-8 text-neutral-600" />
-                  </div>
-                  <p className="text-neutral-400 text-lg">Your cart is empty.</p>
-                  <button 
-                    onClick={() => setIsCartOpen(false)}
-                    className="mt-4 text-green-500 font-bold hover:text-green-400"
-                  >
-                    Start Shopping
-                  </button>
-                </div>
-              ) : (
-                cart.map(item => (
-                  <div key={item.id} className="flex gap-4 bg-neutral-800/30 p-4 rounded-sm border border-neutral-800">
-                    <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-sm" />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <h3 className="font-bold text-white text-sm uppercase">{item.name}</h3>
-                        <button 
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-neutral-500 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                      <p className="text-green-500 font-bold text-sm mb-3">${item.price.toFixed(2)}</p>
-                      
-                      <div className="flex items-center gap-3">
-                        <button 
-                          onClick={() => updateQuantity(item.id, -1)}
-                          className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, 1)}
-                          className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {cart.length > 0 && (
-              <div className="p-6 bg-neutral-900 border-t border-neutral-800">
-                <div className="flex justify-between items-center mb-4 text-lg font-bold text-white">
-                  <span>Subtotal</span>
-                  <span>${cartTotal.toFixed(2)}</span>
-                </div>
-                <button className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-sm uppercase tracking-wide shadow-lg transition-all mb-3">
-                  Proceed to Checkout
-                </button>
-                <p className="text-center text-xs text-neutral-500">Secure checkout powered by Stripe</p>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* Navbar */}
-      <nav className="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-2">
-              <Target className="h-8 w-8 text-green-500" />
-              <span className="font-bold text-2xl tracking-tighter uppercase text-white">Game<span className="text-green-500">Grip</span></span>
-            </div>
-            
-            {/* Desktop Nav */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#process" className="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
-              <a href="#faq" className="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
-              
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="relative text-white hover:text-green-400 transition-colors p-2"
-              >
-                <ShoppingCart className="h-6 w-6" />
-                {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-
-              <button 
-                onClick={() => document.getElementById('shop').scrollIntoView({ behavior: 'smooth' })}
-                className="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-sm font-bold uppercase text-sm transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.4)]"
-              >
-                Shop Now
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4">
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="relative text-white hover:text-green-400 transition-colors"
-              >
-                <ShoppingCart className="h-6 w-6" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <button 
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-neutral-300 hover:text-white"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-          </div>
+    <!-- Cart Drawer -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] drawer-overlay" onclick="toggleCart(false)"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-neutral-900 border-l border-neutral-800 z-[70] shadow-2xl flex flex-col drawer-content">
+        <div class="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-900/95 backdrop-blur-md">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <!-- ShoppingCart Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                Your Cart
+            </h2>
+            <button onclick="toggleCart(false)" class="text-neutral-400 hover:text-white transition-colors">
+                <!-- X Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 18 18"/></svg>
+            </button>
         </div>
 
-        {/* Mobile Nav */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#process" className="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
-              <a href="#shop" className="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
-              <a href="#faq" className="block px-3 py-2 text-base font-medium hover:text-green-400">FAQ</a>
-            </div>
-          </div>
-        )}
-      </nav>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-6 cart-scroll">
+            <!-- Cart items injected by JS -->
+        </div>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=2000" 
-            alt="American Football background" 
-            className="w-full h-full object-cover opacity-10 grayscale"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/80 to-transparent" />
+        <div id="cart-footer" class="p-6 bg-neutral-900 border-t border-neutral-800 hidden">
+            <div class="flex justify-between items-center mb-4 text-lg font-bold text-white">
+                <span>Subtotal</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button onclick="handleCheckout()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-sm uppercase tracking-wide shadow-lg transition-all mb-3">
+                Proceed to Checkout
+            </button>
+            <p class="text-center text-xs text-neutral-500">Secure checkout powered by Stripe</p>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 mb-8 animate-fade-in">
-            <Star className="h-4 w-4 fill-green-400" />
-            <span className="text-sm font-bold tracking-wide uppercase">100% Flawless Track Record</span>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 uppercase text-white shadow-sm">
-            Stop Playing With<br/>
-            <span className="text-green-500 drop-shadow-md">Factory Wax.</span>
-          </h1>
-          <p className="mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light">
-            I strip, brush, and mud condition every ball by hand. <br className="hidden md:block"/>
-            <strong className="text-white font-semibold">Certified materials. Flawless execution. Just perfection.</strong>
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={() => document.getElementById('shop').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1"
-            >
-              Shop Now <ChevronRight className="h-5 w-5" />
-            </button>
-            <a href="#process" className="bg-neutral-800/50 backdrop-blur-sm border-2 border-neutral-700 hover:border-green-400 hover:text-green-400 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center">
-              How It Works
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Proposition */}
-      <section className="py-20 bg-neutral-900/40 border-y border-neutral-800 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                <User className="h-8 w-8 text-green-500" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 uppercase tracking-wide text-white">Owner-Prepped</h3>
-              <p className="text-neutral-400">I touch every single football that leaves this shop. You aren't buying from a warehouse; you're buying my personal guarantee.</p>
-            </div>
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                <CheckCircle2 className="h-8 w-8 text-green-500" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 uppercase tracking-wide text-white">Zero Mistakes</h3>
-              <p className="text-neutral-400">I have never had a bad review. My reputation is everything, so I don't ship a ball until it is absolutely perfect.</p>
-            </div>
-            <div className="text-center group">
-              <div className="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                <Clock className="h-8 w-8 text-green-500" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 uppercase tracking-wide text-white">Fast Turnaround</h3>
-              <p className="text-neutral-400">You need it for Friday night. I prioritize speed and precision so your QB has the best equipment possible, exactly when they need it.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The Process */}
-      <section id="process" className="py-24 bg-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white drop-shadow-md">The Breakdown</h2>
-            <p className="text-xl text-neutral-400 max-w-2xl mx-auto">Certified materials. Surgical precision. Here is how I build the perfect grip.</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { step: '01', title: 'Strip', desc: 'I manually remove the waxy factory preservation layer that makes new balls slick and unusable.' },
-              { step: '02', title: 'Condition', desc: 'Deep penetration conditioning to darken the leather and improve longevity.' },
-              { step: '03', title: 'Texture', desc: 'Proprietary brushing technique raises the pebble for maximum fingertip control.' },
-              { step: '04', title: 'Mud', desc: 'Application of specific river mud blends to lock in tack and finalize the grip.' }
-            ].map((item, i) => (
-              <div key={i} className="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
-                <div className="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">{item.step}</div>
-                <h4 className="text-lg font-bold text-white mb-2 uppercase">{item.title}</h4>
-                <p className="text-neutral-400 text-sm leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Shop Section */}
-      <section id="shop" className="py-24 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
-              <p className="text-xl text-neutral-400">I keep a small batch of prepped balls in stock. Order now to ensure delivery for game day.</p>
-            </div>
-            <div className="mt-4 md:mt-0 flex items-center gap-2 text-green-400 font-medium bg-neutral-800/50 px-4 py-2 rounded-full border border-neutral-700">
-              <ShieldCheck className="h-5 w-5" /> Certified Materials Only
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <div key={product.id} className="bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all">
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-2xl font-bold mb-2 uppercase text-white">{product.name}</h3>
-                  <p className="text-neutral-400 mb-4 text-sm">{product.description}</p>
-                  <div className="mt-auto pt-6 flex justify-between items-center border-t border-neutral-700/50">
-                    <span className="text-2xl font-black text-white">${product.price.toFixed(2)}</span>
-                    <button 
-                      onClick={() => addToCart(product)}
-                      className="bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-4 py-2 font-bold uppercase text-sm transition-colors rounded-sm shadow-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Orders Section */}
-      <section className="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block p-3 rounded-full bg-neutral-800/50 mb-6">
-            <Mail className="h-8 w-8 text-green-500" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Coach or Equipment Manager?</h2>
-          <p className="text-xl text-neutral-400 mb-8">If you need 6+ balls for your QB room, I offer a bulk discount. I will personally make sure every ball in the set matches perfectly.</p>
-          <form className="max-w-md mx-auto space-y-4">
-             <div className="grid grid-cols-2 gap-4">
-               <input type="text" placeholder="Full Name" className="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
-               <input type="email" placeholder="Email Address" className="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
+        <div id="cart-empty-state" class="text-center py-12 hidden">
+             <div class="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
              </div>
-             <textarea placeholder="Tell me what you need (e.g. 12 GST Primes for Varsity)" className="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 h-24 transition-colors"></textarea>
-             <button className="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white font-bold uppercase py-3 rounded-sm transition-all">
-               Email Me
+             <p class="text-neutral-400 text-lg">Your cart is empty.</p>
+             <button onclick="toggleCart(false); scrollToSection('shop')" class="mt-4 text-green-500 font-bold hover:text-green-400">
+                Start Shopping
              </button>
-          </form>
         </div>
-      </section>
+    </div>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <HelpCircle className="h-10 w-10 text-green-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-extrabold uppercase tracking-tight text-white">Common Questions</h2>
-          </div>
-          
-          <div className="space-y-4">
-            {[
-              { q: "Do you use factory 'tack' sprays?", a: "Absolutely not. I strip the factory wax and use organic conditioners and specific river mud. The grip comes from the leather texture, not a cheap sticky spray." },
-              { q: "How long does shipping take?", a: "I keep a small inventory of prepped balls ready to ship. If it's in stock, it ships within 24 hours. Custom team orders take 3-5 days." },
-              { q: "Will this pass pre-game inspection?", a: "Yes. My process creates a natural, seasoned look and feel. I do not use illegal adhesives or foreign substances." },
-              { q: "What brands do you work on?", a: "I specialize in Wilson GST, Nike Vapor Elite, and Adidas Rifle. I only sell what I can perfect." }
-            ].map((item, i) => (
-              <div key={i} className="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden">
-                <button 
-                  onClick={() => toggleFaq(i)}
-                  className="w-full flex justify-between items-center p-4 text-left font-bold text-white hover:bg-neutral-800/50 transition-colors"
-                >
-                  {item.q}
-                  <ChevronRight className={`h-5 w-5 transform transition-transform ${activeFaq === i ? 'rotate-90' : ''}`} />
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-2">
+                    <!-- Target Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#process" class="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
+                    <a href="#faq" class="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
+                    
+                    <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <button onclick="scrollToSection('shop')" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-sm font-bold uppercase text-sm transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                        Shop Now
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                        <span id="cart-badge-mobile" class="hidden absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="text-neutral-300 hover:text-white">
+                        <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                        <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 18 18"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div id="mobile-menu" class="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800 mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#process" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
+                <a href="#shop" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
+                <a href="#faq" onclick="toggleMobileMenu()" class="block px-3 py-2 text-base font-medium hover:text-green-400">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=2000" alt="American Football background" class="w-full h-full object-cover opacity-10 grayscale">
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/80 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 mb-8 animate-fade-in">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span class="text-sm font-bold tracking-wide uppercase">100% Flawless Track Record</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 uppercase text-white shadow-sm">
+                Stop Playing With<br/>
+                <span class="text-green-500 drop-shadow-md">Factory Wax.</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light">
+                I strip, brush, and mud condition every ball by hand. <br class="hidden md:block"/>
+                <strong class="text-white font-semibold">Certified materials. Flawless execution. Just perfection.</strong>
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToSection('shop')" class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
+                    Shop Now <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </button>
-                {activeFaq === i && (
-                  <div className="p-4 pt-0 text-neutral-400 text-sm leading-relaxed border-t border-neutral-800/30">
-                    <br/>{item.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                <a href="#process" class="bg-neutral-800/50 backdrop-blur-sm border-2 border-neutral-700 hover:border-green-400 hover:text-green-400 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center">
+                    How It Works
+                </a>
+            </div>
         </div>
-      </section>
+    </section>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900/90 backdrop-blur-lg py-12 border-t border-neutral-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Target className="h-6 w-6 text-green-500" />
-              <span className="font-bold text-xl tracking-tighter uppercase text-white">Game<span className="text-green-500">Grip</span></span>
+    <!-- Value Proposition -->
+    <section class="py-20 bg-neutral-900/40 border-y border-neutral-800 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Owner-Prepped</h3>
+                    <p class="text-neutral-400">I touch every single football that leaves this shop. You aren't buying from a warehouse; you're buying my personal guarantee.</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Zero Mistakes</h3>
+                    <p class="text-neutral-400">I have never had a bad review. My reputation is everything, so I don't ship a ball until it is absolutely perfect.</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Fast Turnaround</h3>
+                    <p class="text-neutral-400">You need it for Friday night. I prioritize speed and precision so your QB has the best equipment possible, exactly when they need it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Process -->
+    <section id="process" class="py-24 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white drop-shadow-md">The Breakdown</h2>
+                <p class="text-xl text-neutral-400 max-w-2xl mx-auto">Certified materials. Surgical precision. Here is how I build the perfect grip.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
+                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">01</div>
+                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Strip</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed">I manually remove the waxy factory preservation layer that makes new balls slick and unusable.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
+                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">02</div>
+                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Condition</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed">Deep penetration conditioning to darken the leather and improve longevity.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
+                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">03</div>
+                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Texture</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed">Proprietary brushing technique raises the pebble for maximum fingertip control.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
+                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">04</div>
+                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Mud</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed">Application of specific river mud blends to lock in tack and finalize the grip.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="py-24 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
+                    <p class="text-xl text-neutral-400">I keep a small batch of prepped balls in stock. Order now to ensure delivery for game day.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center gap-2 text-green-400 font-medium bg-neutral-800/50 px-4 py-2 rounded-full border border-neutral-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Certified Materials Only
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8" id="product-grid">
+                <!-- Products injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Orders Section -->
+    <section class="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block p-3 rounded-full bg-neutral-800/50 mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Coach or Equipment Manager?</h2>
+            <p class="text-xl text-neutral-400 mb-8">If you need 6+ balls for your QB room, I offer a bulk discount. I will personally make sure every ball in the set matches perfectly.</p>
+            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); alert('Email feature coming soon!');">
+                 <div class="grid grid-cols-2 gap-4">
+                   <input type="text" placeholder="Full Name" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
+                   <input type="email" placeholder="Email Address" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
+                 </div>
+                 <textarea placeholder="Tell me what you need (e.g. 12 GST Primes for Varsity)" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 h-24 transition-colors"></textarea>
+                 <button class="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white font-bold uppercase py-3 rounded-sm transition-all">
+                   Email Me
+                 </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                <h2 class="text-3xl font-extrabold uppercase tracking-tight text-white">Common Questions</h2>
             </div>
             
-            <div className="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
-              <a href="#" className="hover:text-green-400 transition-colors">Team Orders</a>
-              <a href="#" className="hover:text-green-400 transition-colors">Shipping</a>
-              <a href="#" className="hover:text-green-400 transition-colors">Contact</a>
+            <div class="space-y-4" id="faq-container">
+                <!-- FAQs injected via JS -->
             </div>
-          </div>
-          
-          <div className="mt-8 pt-8 border-t border-neutral-800 text-center md:text-left text-sm text-neutral-500 flex flex-col md:flex-row justify-between items-center">
-            <p>© {new Date().getFullYear()} GameGrip Footballs.</p>
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-               <span>Secure Checkout</span>
-               <div className="h-1 w-1 rounded-full bg-green-500"></div>
-               <span>Hand-Crafted Quality</span>
-            </div>
-          </div>
         </div>
-      </footer>
-    </div>
-  );
-}
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-neutral-900/90 backdrop-blur-lg py-12 border-t border-neutral-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span class="font-bold text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                </div>
+                
+                <div class="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
+                    <a href="#" class="hover:text-green-400 transition-colors">Team Orders</a>
+                    <a href="#" class="hover:text-green-400 transition-colors">Shipping</a>
+                    <a href="#" class="hover:text-green-400 transition-colors">Contact</a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-neutral-800 text-center md:text-left text-sm text-neutral-500 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; <span id="year"></span> GameGrip Footballs.</p>
+                <div class="flex items-center gap-4 mt-4 md:mt-0">
+                   <span>Secure Checkout</span>
+                   <div class="h-1 w-1 rounded-full bg-green-500"></div>
+                   <span>Hand-Crafted Quality</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data ---
+        const products = [
+            {
+                id: 1,
+                name: 'The "Varsity" Prep',
+                price: 85.00,
+                image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
+                description: 'Standard break-in. Softened leather, reliable grip.'
+            },
+            {
+                id: 2,
+                name: 'The "Collegiate" Prime',
+                price: 110.00,
+                image: 'https://images.unsplash.com/photo-1587280501635-a19e2e60dcdd?auto=format&fit=crop&q=80&w=600',
+                description: 'Darker leather, higher tack. Elite Friday night performance.'
+            },
+            {
+                id: 3,
+                name: 'The "Pro" Cut',
+                price: 145.00,
+                image: 'https://images.unsplash.com/photo-1628891435222-06592209d730?auto=format&fit=crop&q=80&w=600',
+                description: 'Maximum texture. Multi-stage mud treatment. The ultimate weapon.'
+            }
+        ];
+
+        const faqs = [
+            { q: "Do you use factory 'tack' sprays?", a: "Absolutely not. I strip the factory wax and use organic conditioners and specific river mud. The grip comes from the leather texture, not a cheap sticky spray." },
+            { q: "How long does shipping take?", a: "I keep a small inventory of prepped balls ready to ship. If it's in stock, it ships within 24 hours. Custom team orders take 3-5 days." },
+            { q: "Will this pass pre-game inspection?", a: "Yes. My process creates a natural, seasoned look and feel. I do not use illegal adhesives or foreign substances." },
+            { q: "What brands do you work on?", a: "I specialize in Wilson GST, Nike Vapor Elite, and Adidas Rifle. I only sell what I can perfect." }
+        ];
+
+        // --- State ---
+        let cart = [];
+        let isCartOpen = false;
+        let isMenuOpen = false;
+        let activeFaq = null;
+
+        // --- Initialization ---
+        document.getElementById('year').textContent = new Date().getFullYear();
+        renderProducts();
+        renderFaqs();
+        renderCart();
+
+        // --- Functions ---
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-2xl font-bold mb-2 uppercase text-white">${product.name}</h3>
+                        <p class="text-neutral-400 mb-4 text-sm">${product.description}</p>
+                        <div class="mt-auto pt-6 flex justify-between items-center border-t border-neutral-700/50">
+                            <span class="text-2xl font-black text-white">$${product.price.toFixed(2)}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-4 py-2 font-bold uppercase text-sm transition-colors rounded-sm shadow-sm">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFaqs() {
+            const container = document.getElementById('faq-container');
+            container.innerHTML = faqs.map((item, i) => `
+                <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden">
+                    <button onclick="toggleFaq(${i})" class="w-full flex justify-between items-center p-4 text-left font-bold text-white hover:bg-neutral-800/50 transition-colors">
+                        ${item.q}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform ${activeFaq === i ? 'rotate-90' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                    <div class="${activeFaq === i ? 'block' : 'hidden'} p-4 pt-0 text-neutral-400 text-sm leading-relaxed border-t border-neutral-800/30">
+                        <br>${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFaq(index) {
+            activeFaq = activeFaq === index ? null : index;
+            renderFaqs();
+        }
+
+        // --- Cart Logic ---
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            renderCart();
+            toggleCart(true);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            renderCart();
+        }
+
+        function updateQuantity(productId, change) {
+            cart = cart.map(item => {
+                if (item.id === productId) {
+                    const newQuantity = item.quantity + change;
+                    return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
+                }
+                return item;
+            });
+            renderCart();
+        }
+
+        function toggleCart(open) {
+            isCartOpen = open;
+            const overlay = document.getElementById('cart-overlay');
+            const drawer = document.getElementById('cart-drawer');
+            
+            if (open) {
+                overlay.classList.add('open');
+                drawer.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Prevent body scroll
+            } else {
+                overlay.classList.remove('open');
+                drawer.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartEmptyState = document.getElementById('cart-empty-state');
+            const cartFooter = document.getElementById('cart-footer');
+            const cartTotalEl = document.getElementById('cart-total');
+            const badges = [document.getElementById('cart-badge-desktop'), document.getElementById('cart-badge-mobile')];
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            // Update Badges
+            badges.forEach(badge => {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                }
+            });
+
+            if (cart.length === 0) {
+                cartItemsContainer.classList.add('hidden');
+                cartEmptyState.classList.remove('hidden');
+                cartFooter.classList.add('hidden');
+            } else {
+                cartItemsContainer.classList.remove('hidden');
+                cartEmptyState.classList.add('hidden');
+                cartFooter.classList.remove('hidden');
+
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 bg-neutral-800/30 p-4 rounded-sm border border-neutral-800">
+                        <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-sm">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="font-bold text-white text-sm uppercase">${item.name}</h3>
+                                <button onclick="removeFromCart(${item.id})" class="text-neutral-500 hover:text-red-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                            <p class="text-green-500 font-bold text-sm mb-3">$${item.price.toFixed(2)}</p>
+                            
+                            <div class="flex items-center gap-3">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                                </button>
+                                <span class="text-sm font-medium w-4 text-center text-white">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                cartTotalEl.textContent = `$${total.toFixed(2)}`;
+            }
+        }
+
+        function handleCheckout() {
+            alert("Integration Point: This is where we would redirect to your Shopify Checkout URL.");
+        }
+
+        // --- UI Logic ---
+
+        function toggleMobileMenu() {
+            isMenuOpen = !isMenuOpen;
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            if (isMenuOpen) {
+                menu.classList.add('open');
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                menu.classList.remove('open');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
