@@ -31,6 +31,11 @@
 </head>
 <body class="bg-neutral-900 text-neutral-100 selection-green relative flex flex-col min-h-screen">
 
+    <!-- Message Box (Replacing alert) -->
+    <div id="message-box" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-neutral-800 border border-green-500 px-6 py-3 rounded-sm shadow-2xl transition-all opacity-0 pointer-events-none">
+        <p id="message-text" class="text-white font-bold text-sm uppercase tracking-wide text-center"></p>
+    </div>
+
     <!-- Background -->
     <div class="fixed inset-0 z-[-1]">
         <div class="absolute inset-0 bg-neutral-900"></div>
@@ -88,7 +93,6 @@
                     <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
                 </a>
                 
-                <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html#process" class="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
                     <a href="index.html#faq" class="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
@@ -99,7 +103,6 @@
                     </button>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
@@ -113,7 +116,6 @@
             </div>
         </div>
 
-        <!-- Mobile Nav -->
         <div id="mobile-menu" class="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800 mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="index.html#process" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
@@ -123,7 +125,6 @@
         </div>
     </nav>
 
-    <!-- Product Detail Section -->
     <section class="pt-32 pb-20 flex-grow">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <a href="index.html" class="inline-flex items-center gap-2 text-neutral-400 hover:text-green-400 mb-8 transition-colors">
@@ -135,20 +136,22 @@
                 <!-- Left: Image Gallery -->
                 <div class="space-y-4">
                     <div class="relative bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-[4/3] group">
-                        <img src="https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=1200" alt="GameGrip Elite Football" class="w-full h-full object-cover">
+                        <img id="main-product-image" src="ball11.png" alt="GameGrip Elite Football" class="w-full h-full object-cover">
                         <div class="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wide rounded-sm shadow-md">
                             Ready To Ship
                         </div>
                     </div>
                     <div class="grid grid-cols-3 gap-4">
-                        <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-square cursor-pointer hover:border-green-500/50 transition-all">
-                            <img src="https://images.unsplash.com/photo-1587280501635-a19e2e60dcdd?auto=format&fit=crop&q=80&w=400" alt="Detail 1" class="w-full h-full object-cover">
+                        <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-square cursor-pointer hover:border-green-500/50 transition-all" onclick="document.getElementById('main-product-image').src='ball11.png'">
+                            <img src="ball11.png" alt="Detail 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-square cursor-pointer hover:border-green-500/50 transition-all" onclick="document.getElementById('main-product-image').src='ball12.png'">
+                            <img src="ball12.png" alt="Detail 2" class="w-full h-full object-cover">
                         </div>
                         <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-square cursor-pointer hover:border-green-500/50 transition-all">
-                            <img src="https://images.unsplash.com/photo-1628891435222-06592209d730?auto=format&fit=crop&q=80&w=400" alt="Detail 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden aspect-square cursor-pointer hover:border-green-500/50 transition-all">
-                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=400" alt="Detail 3" class="w-full h-full object-cover">
+                             <div class="w-full h-full flex items-center justify-center text-neutral-600">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -160,7 +163,7 @@
                         Wilson GST Prime
                     </div>
                     <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 uppercase tracking-tight">The GameGrip Elite</h1>
-                    <div class="text-3xl font-black text-white mb-6">$150.00</div>
+                    <div class="text-3xl font-black text-white mb-6">$145.00</div>
                     
                     <p class="text-neutral-300 text-lg leading-relaxed mb-8">
                         The ultimate game ball. I start with a brand new Wilson GST Prime and apply my proprietary multi-stage conditioning process. I do not strip the ball; I brush the factory wax into the leather to create a permanent tacky foundation, then condition it for a rich, dark finish.
@@ -184,7 +187,6 @@
                     <img src="logo.png" alt="" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
                     <span class="font-bold text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
                 </a>
-                
                 <div class="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
                     <a href="index.html#contact" class="hover:text-green-400 transition-colors">Team Orders</a>
                     <a href="index.html#shop" class="hover:text-green-400 transition-colors">Shipping</a>
@@ -208,8 +210,8 @@
         const product = {
             id: 1,
             name: 'The GameGrip Elite',
-            price: 150.00,
-            image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
+            price: 145.00,
+            image: 'ball11.png',
             description: 'The ultimate game ball. Wilson GST Prime.'
         };
 
@@ -223,7 +225,19 @@
         loadCart(); 
         renderCart();
 
-        // --- Cart Logic ---
+        // --- Functions ---
+
+        function showMessage(text) {
+            const box = document.getElementById('message-box');
+            const boxText = document.getElementById('message-text');
+            boxText.textContent = text;
+            box.style.opacity = '1';
+            box.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                box.style.opacity = '0';
+                box.style.pointerEvents = 'none';
+            }, 3000);
+        }
 
         function loadCart() {
             const savedCart = localStorage.getItem('gamegrip_cart');
@@ -297,10 +311,7 @@
                         badge.textContent = count;
                         badge.classList.remove('hidden');
                         badge.classList.add('flex');
-                    } else {
-                        badge.classList.add('hidden');
-                        badge.classList.remove('flex');
-                    }
+                    } else badge.classList.add('hidden');
                 });
             }
 
@@ -336,13 +347,12 @@
                         </div>
                     </div>
                 `).join('');
+                
                 cartTotalEl.textContent = `$${total.toFixed(2)}`;
             }
         }
 
-        function handleCheckout() {
-            alert("Integration Point: This is where we would redirect to your Shopify Checkout URL.");
-        }
+        function handleCheckout() { showMessage("Redirecting to Shopify Checkout..."); }
 
         function toggleMobileMenu() {
             isMenuOpen = !isMenuOpen;
