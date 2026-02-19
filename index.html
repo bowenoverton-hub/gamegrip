@@ -32,6 +32,11 @@
 </head>
 <body class="bg-neutral-900 text-neutral-100 selection-green relative">
 
+    <!-- Message Box (Replacing alert) -->
+    <div id="message-box" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-neutral-800 border border-green-500 px-6 py-3 rounded-sm shadow-2xl transition-all opacity-0 pointer-events-none">
+        <p id="message-text" class="text-white font-bold text-sm uppercase tracking-wide text-center"></p>
+    </div>
+
     <!-- Background -->
     <div class="fixed inset-0 z-[-1]">
         <div class="absolute inset-0 bg-neutral-900"></div>
@@ -89,7 +94,6 @@
                     <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
                 </a>
                 
-                <!-- Desktop Nav -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#process" onclick="scrollToSection('process'); return false;" class="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
                     <a href="#faq" onclick="scrollToSection('faq'); return false;" class="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
@@ -105,7 +109,6 @@
                     </button>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
@@ -119,7 +122,6 @@
             </div>
         </div>
 
-        <!-- Mobile Nav -->
         <div id="mobile-menu" class="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800 mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#process" onclick="scrollToSection('process'); toggleMobileMenu(); return false;" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
@@ -138,19 +140,15 @@
         </div>
         
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 mb-8 animate-fade-in">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span class="text-sm font-bold tracking-wide uppercase">100% Flawless Track Record</span>
-            </div>
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 uppercase text-white shadow-sm">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 uppercase text-white shadow-sm animate-fade-in">
                 Stop Playing With<br/>
                 <span class="text-green-500 drop-shadow-md">Factory Wax.</span>
             </h1>
-            <p class="mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light">
+            <p class="mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light animate-fade-in">
                 I brush and mud condition every ball by hand. <br class="hidden md:block"/>
                 <strong class="text-white font-semibold">Certified materials. Flawless execution. Just perfection.</strong>
             </p>
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
                 <a href="product_details.html" class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
                     Shop Now <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </a>
@@ -199,25 +197,21 @@
             </div>
 
             <div class="grid md:grid-cols-4 gap-8">
-                <!-- Step 1 -->
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
                     <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">01</div>
                     <h4 class="text-lg font-bold text-white mb-2 uppercase">Prime</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">I brush the factory wax <em>into</em> the ball to create a tacky foundation, rather than stripping it away.</p>
+                    <p class="text-neutral-400 text-sm leading-relaxed">I brush the factory wax into the ball to create a tacky foundation, rather than stripping it away.</p>
                 </div>
-                <!-- Step 2 -->
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
                     <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">02</div>
                     <h4 class="text-lg font-bold text-white mb-2 uppercase">Condition</h4>
                     <p class="text-neutral-400 text-sm leading-relaxed">Rich conditioning to darken the leather and improve longevity.</p>
                 </div>
-                <!-- Step 3 -->
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
                     <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">03</div>
                     <h4 class="text-lg font-bold text-white mb-2 uppercase">Texture</h4>
                     <p class="text-neutral-400 text-sm leading-relaxed">Proprietary brushing technique works the wax in and blends the texture for maximum fingertip control.</p>
                 </div>
-                <!-- Step 4 -->
                 <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
                     <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">04</div>
                     <h4 class="text-lg font-bold text-white mb-2 uppercase">Mud</h4>
@@ -241,7 +235,7 @@
         </div>
     </section>
 
-    <!-- Send In Your Ball Section -->
+    <!-- Send In Your Ball Service Section -->
     <section id="send-in" class="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-neutral-800/30 border border-neutral-700/50 rounded-sm p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-16">
@@ -252,7 +246,7 @@
                     </div>
                     <h2 class="text-3xl md:text-4xl font-extrabold text-white uppercase tracking-tight">Already Have A Ball?</h2>
                     <p class="text-xl text-neutral-400 leading-relaxed">
-                        Don't let a good ball go to waste. Send in your new or lightly used <strong>Wilson</strong> or <strong>Big Game</strong> footballs, and I will apply the full GameGrip conditioning process to them.
+                        Don't let a good ball go to waste. Send in your new or lightly used Wilson or Big Game footballs, and I will apply the full GameGrip conditioning process to them.
                     </p>
                     <ul class="space-y-3 text-neutral-300">
                         <li class="flex items-center gap-3">
@@ -265,7 +259,7 @@
                         </li>
                         <li class="flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            <strong>$75.00</strong> per ball (You pay shipping)
+                            <strong>$45.00</strong> per ball
                         </li>
                     </ul>
                     <button onclick="scrollToSection('contact'); setTimeout(() => { document.querySelector('textarea').value = 'I want to send in my own ball for conditioning.'; }, 600);" class="inline-block bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-8 py-4 font-bold uppercase text-lg transition-colors rounded-sm shadow-sm mt-4">
@@ -274,10 +268,10 @@
                 </div>
                 <div class="flex-1 w-full flex justify-center">
                     <div class="relative w-full max-w-sm aspect-square bg-neutral-800/50 rounded-sm border border-neutral-700/50 flex items-center justify-center group overflow-hidden">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-neutral-700 group-hover:text-green-500/50 transition-colors duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                         <img src="ball12.png" alt="Send in ball" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity">
                          <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/80 to-transparent"></div>
                          <div class="absolute bottom-6 left-0 right-0 text-center">
-                             <span class="text-neutral-500 text-sm uppercase tracking-widest font-bold">Mail-In Lab</span>
+                             <span class="text-white text-sm uppercase tracking-widest font-bold">Mail-In Lab</span>
                          </div>
                     </div>
                 </div>
@@ -285,7 +279,7 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Contact & Custom Orders Section -->
     <section id="contact" class="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-block p-3 rounded-full bg-neutral-800/50 mb-6">
@@ -293,7 +287,7 @@
             </div>
             <h2 class="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Contact & Custom Orders</h2>
             <p class="text-xl text-neutral-400 mb-8">Need a bulk discount for your team (6+ balls)? Have a general question about my process? Send me a message directly.</p>
-            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); alert('Message sent! I will get back to you shortly.');">
+            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); showMessage('Message sent! I will get back to you shortly.');">
                  <div class="grid grid-cols-2 gap-4">
                    <input type="text" placeholder="Full Name" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
                    <input type="email" placeholder="Email Address" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
@@ -353,8 +347,8 @@
             {
                 id: 1,
                 name: 'The GameGrip Elite',
-                price: 150.00,
-                image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?auto=format&fit=crop&q=80&w=600',
+                price: 145.00,
+                image: 'ball11.png',
                 description: 'The ultimate game ball. A Wilson GST Prime treated with my proprietary process for instant game-readiness.'
             }
         ];
@@ -380,6 +374,18 @@
         renderCart();
 
         // --- Functions ---
+
+        function showMessage(text) {
+            const box = document.getElementById('message-box');
+            const boxText = document.getElementById('message-text');
+            boxText.textContent = text;
+            box.style.opacity = '1';
+            box.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                box.style.opacity = '0';
+                box.style.pointerEvents = 'none';
+            }, 3000);
+        }
 
         function renderProducts() {
             const grid = document.getElementById('product-grid');
@@ -422,8 +428,6 @@
             renderFaqs();
         }
 
-        // --- Cart Logic ---
-
         function loadCart() {
             const savedCart = localStorage.getItem('gamegrip_cart');
             if (savedCart) {
@@ -438,13 +442,11 @@
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             const existingItem = cart.find(item => item.id === productId);
-            
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
                 cart.push({ ...product, quantity: 1 });
             }
-            
             saveCart();
             renderCart();
             toggleCart(true);
@@ -472,7 +474,6 @@
             isCartOpen = open;
             const overlay = document.getElementById('cart-overlay');
             const drawer = document.getElementById('cart-drawer');
-            
             if (open) {
                 overlay.classList.add('open');
                 drawer.classList.add('open');
@@ -494,7 +495,6 @@
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            // Update Badges
             if(badges[0]){
                 badges.forEach(badge => {
                     if (count > 0) {
@@ -528,7 +528,6 @@
                                 </button>
                             </div>
                             <p class="text-green-500 font-bold text-sm mb-3">$${item.price.toFixed(2)}</p>
-                            
                             <div class="flex items-center gap-3">
                                 <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
@@ -541,23 +540,17 @@
                         </div>
                     </div>
                 `).join('');
-                
                 cartTotalEl.textContent = `$${total.toFixed(2)}`;
             }
         }
 
-        function handleCheckout() {
-            alert("Integration Point: This is where we would redirect to your Shopify Checkout URL.");
-        }
-
-        // --- UI Logic ---
+        function handleCheckout() { showMessage("Redirecting to Shopify Checkout..."); }
 
         function toggleMobileMenu() {
             isMenuOpen = !isMenuOpen;
             const menu = document.getElementById('mobile-menu');
             const menuIcon = document.getElementById('menu-icon');
             const closeIcon = document.getElementById('close-icon');
-
             if (isMenuOpen) {
                 menu.classList.add('open');
                 menuIcon.classList.add('hidden');
