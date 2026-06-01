@@ -546,6 +546,24 @@
                     nav.classList.add('border-white/5', 'bg-[#0a0a0a]/80');
                 }
             });
+
+            // Easter Egg: Type 'jazz'
+            let keyBuffer = '';
+            document.addEventListener('keydown', (e) => {
+                if (e.key.length === 1) { // Only track single character keys
+                    keyBuffer += e.key.toLowerCase();
+                    // Keep buffer to maximum 4 characters (length of 'jazz')
+                    if (keyBuffer.length > 4) {
+                        keyBuffer = keyBuffer.slice(-4);
+                    }
+                    if (keyBuffer === 'jazz') {
+                        const audio = new Audio('jazz.mp3');
+                        audio.play().catch(err => console.log('Audio play failed:', err));
+                        showMessage("🎷 Smooth prep. Smooth jazz.");
+                        keyBuffer = ''; // Reset after playing
+                    }
+                }
+            });
         }
 
         // --- Core Functions ---
