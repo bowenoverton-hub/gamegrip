@@ -520,7 +520,7 @@
 
         // --- Shopify Setup ---
         const SHOPIFY_DOMAIN = 'f7gujd-xe.myshopify.com';
-        const STOREFRONT_TOKEN = 'atkn_f47de145859a0052b5343483853398e3c5c83c91cebcda401be097f12f13820a';
+        const STOREFRONT_TOKEN = '4ff827d92ad61998364636a2058a9ceb';
         const API_VERSION = '2026-04';
 
         // --- State ---
@@ -787,11 +787,23 @@
                     },
                     body: JSON.stringify({ query: productQuery })
                 });
+
+                // Check for unauthorized tokens
+                if (productRes.status === 401) {
+                    throw new Error("401 Unauthorized: Shopify rejected your token. Ensure you copied the 'Storefront API access token', NOT the Admin token.");
+                }
                 
                 const productData = await productRes.json();
                 
+                // Handle GraphQL query errors explicitly
+                if (productData.errors) {
+                    console.error("GraphQL Errors:", productData.errors);
+                    throw new Error("Failed to communicate with Shopify data.");
+                }
+
+                // Handle missing product records
                 if (!productData.data || !productData.data.products.edges.length) {
-                    throw new Error("No products found in Shopify store.");
+                    throw new Error("No products found. Check that your product status is 'Active' and published to the 'GameGrip Website' sales channel.");
                 }
                 
                 const variantId = productData.data.products.edges[0].node.variants.edges[0].node.id;
@@ -826,6 +838,10 @@
                         }
                     })
                 });
+
+                if (cartRes.status === 401) {
+                    throw new Error("401 Unauthorized: Token rejected during checkout creation.");
+                }
                 
                 const cartData = await cartRes.json();
                 
@@ -833,13 +849,22 @@
                     // Redirect to secure Shopify checkout!
                     window.location.href = cartData.data.cartCreate.cart.checkoutUrl;
                 } else {
-                    console.error(cartData.data?.cartCreate?.userErrors);
-                    throw new Error("Could not generate checkout link.");
+                    console.error("Cart generation errors:", cartData.data?.cartCreate?.userErrors);
+                    throw new Error("Could not generate secure checkout link.");
                 }
 
             } catch (error) {
-                console.error(error);
-                showMessage("Checkout error. Please check Shopify setup.");
+                console.error("Checkout Failure:", error);
+                
+                // Present a helpful UI message to the user based on the failure type
+                if (error.message.includes("401")) {
+                    showMessage("Auth Error: Check console. Invalid Shopify Token.");
+                } else if (error.message.includes("No products found")) {
+                    showMessage("Error: Product is not published to Sales Channel.");
+                } else {
+                    showMessage("Checkout error. Please check Shopify setup.");
+                }
+                
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
