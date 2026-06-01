@@ -65,10 +65,7 @@
         }
         @keyframes heroReveal {
             0% { opacity: 0; transform: translateY(60px) scale(0.95); filter: blur(5px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-
-        /* Scroll Reveal Animations */
+        /* Reveal Animations */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -94,12 +91,15 @@
             backdrop-filter: blur(10px);
         }
         .marquee-content {
-            display: inline-block;
+            display: flex;
+            flex-shrink: 0;
+            gap: 2rem;
+            padding-right: 2rem;
             animation: marquee 20s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-100%); }
         }
 
         /* Magnetic Item Wrapper */
@@ -255,7 +255,13 @@
 
     <!-- Marquee Banner -->
     <div class="marquee-container py-4 relative z-10 bg-[#0a0a0a]">
-        <div class="marquee-content text-green-500/80 font-black uppercase tracking-[0.3em] text-sm flex gap-8">
+        <div class="marquee-content text-green-500/80 font-black uppercase tracking-[0.3em] text-sm">
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+        </div>
+        <!-- Duplicated content for seamless infinite looping -->
+        <div class="marquee-content text-green-500/80 font-black uppercase tracking-[0.3em] text-sm" aria-hidden="true">
             <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
             <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
             <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
@@ -370,15 +376,15 @@
                     
                     <div class="flex flex-col md:flex-row justify-center items-stretch gap-4 mb-12">
                         <div class="flex-1 flex flex-col items-center justify-center text-center bg-black/40 border border-white/5 rounded-sm p-6 hover:border-green-500/30 transition-colors">
-                            <span class="text-green-500 font-black text-2xl mb-2">01.</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
                             <span class="text-neutral-300 font-medium text-sm leading-relaxed">Full Prime/Condition/Mud/Texture process</span>
                         </div>
                         <div class="flex-1 flex flex-col items-center justify-center text-center bg-black/40 border border-white/5 rounded-sm p-6 hover:border-green-500/30 transition-colors">
-                            <span class="text-green-500 font-black text-2xl mb-2">02.</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             <span class="text-neutral-300 font-medium text-sm leading-relaxed">2-3 day turnaround time</span>
                         </div>
                         <div class="flex-1 flex flex-col items-center justify-center text-center bg-black/40 border border-white/5 rounded-sm p-6 hover:border-green-500/30 transition-colors">
-                            <span class="text-green-500 font-black text-2xl mb-2">$45.00</span>
+                            <span class="text-green-500 font-black text-3xl mb-2">$45</span>
                             <span class="text-neutral-300 font-medium text-sm leading-relaxed">Flat rate per ball</span>
                         </div>
                     </div>
