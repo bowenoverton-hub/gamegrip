@@ -58,6 +58,16 @@
         .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .mobile-menu.open { max-height: 400px; }
         
+        /* Hero Load Animation */
+        .hero-animate {
+            opacity: 0;
+            animation: heroReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+        }
+        @keyframes heroReveal {
+            0% { opacity: 0; transform: translateY(60px) scale(0.95); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
         /* Scroll Reveal Animations */
         .reveal {
             opacity: 0;
@@ -215,10 +225,10 @@
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
             <div class="reveal inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-neutral-300 mb-10">
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-xs font-bold tracking-[0.2em] uppercase">Crafted in the Garage. Built for the Gridiron.</span>
+                <span class="text-xs font-bold tracking-[0.2em] uppercase">No Shortcuts. Just Elite Grip.</span>
             </div>
             
-            <h1 class="reveal reveal-delay-1 text-6xl md:text-8xl lg:text-[8rem] leading-[0.9] font-black tracking-tighter mb-8 uppercase text-white mix-blend-difference relative">
+            <h1 class="hero-animate text-6xl md:text-8xl lg:text-[8rem] leading-[0.9] font-black tracking-tighter mb-8 uppercase text-white mix-blend-difference relative">
                 Stop Playing <br/>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">With Factory Wax.</span>
             </h1>
@@ -328,7 +338,7 @@
     <section id="shop" class="py-32 bg-[#050505] border-t border-white/5 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="reveal text-center mb-20 flex flex-col items-center">
-                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-white">The Arsenal</h2>
+                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-white">GameGrip Footballs</h2>
                 <div class="inline-flex items-center gap-2 text-green-400 text-xs font-bold uppercase tracking-widest bg-green-500/10 px-4 py-2 rounded-full border border-green-500/20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                     Certified Materials Only
