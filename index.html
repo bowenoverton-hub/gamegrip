@@ -1,118 +1,190 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth bg-neutral-950">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameGrip - Precision Football Prep</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&display=swap');
+        
+        :root {
+            --cursor-x: 50%;
+            --cursor-y: 50%;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
         .selection-green::selection { background-color: #22c55e; color: white; }
         
-        /* Custom scrollbar for cart */
-        .cart-scroll::-webkit-scrollbar { width: 6px; }
-        .cart-scroll::-webkit-scrollbar-track { background: #171717; }
-        .cart-scroll::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
+        /* Tactile Noise Overlay */
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Mouse Spotlight Effect */
+        .spotlight {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle 600px at var(--cursor-x) var(--cursor-y), rgba(34, 197, 94, 0.07), transparent 80%);
+            transition: background 0.1s ease;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
         
         /* Drawer transitions */
-        .drawer-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .drawer-overlay { opacity: 0; pointer-events: none; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-        .drawer-content { transform: translateX(100%); transition: transform 0.3s ease-out; }
+        .drawer-content { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .drawer-content.open { transform: translateX(0); }
         
         /* Mobile menu transition */
-        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
-        .mobile-menu.open { max-height: 300px; }
+        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .mobile-menu.open { max-height: 400px; }
         
-        /* Fade in animation */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Infinite Marquee */
+        .marquee-container {
+            width: 100vw;
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Magnetic Item Wrapper */
+        .magnetic-wrap { display: inline-block; }
     </style>
 </head>
-<body class="bg-neutral-900 text-neutral-100 selection-green relative">
+<body class="text-neutral-100 selection-green relative">
 
-    <!-- Message Box (Replacing alert) -->
-    <div id="message-box" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-neutral-800 border border-green-500 px-6 py-3 rounded-sm shadow-2xl transition-all opacity-0 pointer-events-none">
-        <p id="message-text" class="text-white font-bold text-sm uppercase tracking-wide text-center"></p>
-    </div>
+    <div class="bg-noise"></div>
+    <div class="spotlight" id="spotlight"></div>
 
-    <!-- Background -->
-    <div class="fixed inset-0 z-[-1]">
-        <div class="absolute inset-0 bg-neutral-900"></div>
-        <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=2000" alt="Dark texture" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay">
-        <div class="absolute inset-0 bg-gradient-to-b from-neutral-900/80 via-neutral-900/70 to-neutral-950/90"></div>
+    <!-- Message Box -->
+    <div id="message-box" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-neutral-900 border border-green-500 px-6 py-3 rounded-sm shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all opacity-0 pointer-events-none transform -translate-y-4">
+        <p id="message-text" class="text-white font-bold text-sm uppercase tracking-wider text-center"></p>
     </div>
 
     <!-- Cart Drawer -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] drawer-overlay" onclick="toggleCart(false)"></div>
-    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-neutral-900 border-l border-neutral-800 z-[70] shadow-2xl flex flex-col drawer-content">
-        <div class="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-900/95 backdrop-blur-md">
-            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+    <div id="cart-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] drawer-overlay" onclick="toggleCart(false)"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#0a0a0a] border-l border-neutral-800/50 z-[70] shadow-2xl flex flex-col drawer-content">
+        <div class="p-6 border-b border-neutral-800/50 flex justify-between items-center bg-black/50 backdrop-blur-md">
+            <h2 class="text-xl font-bold text-white flex items-center gap-3 tracking-tight uppercase">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
                 Your Cart
             </h2>
-            <button onclick="toggleCart(false)" class="text-neutral-400 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            <button onclick="toggleCart(false)" class="text-neutral-500 hover:text-white transition-colors transform hover:rotate-90 duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
 
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-6 cart-scroll">
-            <!-- Cart items injected by JS -->
-        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4 cart-scroll"></div>
 
-        <div id="cart-footer" class="p-6 bg-neutral-900 border-t border-neutral-800 hidden">
-            <div class="flex justify-between items-center mb-4 text-lg font-bold text-white">
-                <span>Subtotal</span>
-                <span id="cart-total">$0.00</span>
+        <div id="cart-footer" class="p-6 bg-black/50 border-t border-neutral-800/50 hidden backdrop-blur-md">
+            <div class="flex justify-between items-center mb-6 text-lg font-bold text-white">
+                <span class="text-neutral-400 uppercase text-sm tracking-widest">Subtotal</span>
+                <span id="cart-total" class="text-2xl">$0.00</span>
             </div>
-            <button onclick="handleCheckout()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-sm uppercase tracking-wide shadow-lg transition-all mb-3">
-                Proceed to Checkout
-            </button>
-            <p class="text-center text-xs text-neutral-500">Secure checkout powered by Stripe</p>
+            <div class="magnetic-wrap w-full">
+                <button onclick="handleCheckout()" class="magnetic w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-sm uppercase tracking-widest shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all mb-3 relative overflow-hidden group">
+                    <span class="relative z-10">Proceed to Checkout</span>
+                    <div class="absolute inset-0 bg-green-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 z-0"></div>
+                </button>
+            </div>
+            <p class="text-center text-xs text-neutral-600 uppercase tracking-wider font-bold mt-2">Secure checkout via Stripe</p>
         </div>
         
-        <div id="cart-empty-state" class="text-center py-12 hidden">
-             <div class="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div id="cart-empty-state" class="text-center py-20 hidden flex-1 flex flex-col justify-center">
+             <div class="w-20 h-20 bg-neutral-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-neutral-800">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neutral-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
              </div>
-             <p class="text-neutral-400 text-lg">Your cart is empty.</p>
-             <button onclick="toggleCart(false); scrollToSection('shop');" class="mt-4 text-green-500 font-bold hover:text-green-400">
-                Start Shopping
+             <p class="text-neutral-500 text-lg uppercase tracking-widest font-bold">Your cart is empty</p>
+             <button onclick="toggleCart(false); scrollToSection('shop');" class="mt-8 text-green-500 font-bold hover:text-green-400 uppercase tracking-wider text-sm border-b border-green-500/30 hover:border-green-400 pb-1 transition-all">
+                Return to Shop
              </button>
         </div>
     </div>
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 shadow-lg">
+    <nav class="fixed w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="index.html" class="flex items-center gap-3 group">
-                    <img src="logo.png" alt="" class="h-10 w-auto object-contain transition-transform group-hover:scale-105">
-                    <span class="font-bold text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
-                </a>
+            <div class="flex justify-between items-center h-24">
+                <div class="magnetic-wrap">
+                    <a href="index.html" class="magnetic flex items-center gap-3 group">
+                        <img src="logo.png" alt="" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display:none;" class="items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        </div>
+                        <span class="font-black text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                    </a>
+                </div>
                 
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#process" onclick="scrollToSection('process'); return false;" class="text-sm font-medium hover:text-green-400 transition-colors">My Process</a>
-                    <a href="#faq" onclick="scrollToSection('faq'); return false;" class="text-sm font-medium hover:text-green-400 transition-colors">FAQ</a>
-                    <a href="#contact" onclick="scrollToSection('contact'); return false;" class="text-sm font-medium hover:text-green-400 transition-colors">Contact</a>
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="#process" onclick="scrollToSection('process'); return false;" class="text-xs font-bold uppercase tracking-widest text-neutral-400 hover:text-green-400 transition-colors">The Process</a>
+                    <a href="#faq" onclick="scrollToSection('faq'); return false;" class="text-xs font-bold uppercase tracking-widest text-neutral-400 hover:text-green-400 transition-colors">FAQ</a>
+                    <a href="#contact" onclick="scrollToSection('contact'); return false;" class="text-xs font-bold uppercase tracking-widest text-neutral-400 hover:text-green-400 transition-colors">Contact</a>
                     
-                    <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                        <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
-                    </button>
+                    <div class="h-4 w-px bg-neutral-800"></div>
 
-                    <button onclick="scrollToSection('shop')" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-sm font-bold uppercase text-sm transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
-                        Shop Now
-                    </button>
+                    <div class="magnetic-wrap">
+                        <button onclick="toggleCart(true)" class="magnetic relative text-white hover:text-green-400 transition-colors p-2 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                            <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                        </button>
+                    </div>
+
+                    <div class="magnetic-wrap">
+                        <button onclick="scrollToSection('shop')" class="magnetic bg-white text-black hover:bg-green-500 hover:text-white px-6 py-3 rounded-sm font-black uppercase text-xs tracking-widest transition-all flex items-center gap-2">
+                            Shop Now
+                        </button>
+                    </div>
                 </div>
 
-                <div class="md:hidden flex items-center gap-4">
+                <div class="md:hidden flex items-center gap-6">
                     <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                        <span id="cart-badge-mobile" class="hidden absolute -top-2 -right-2 bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                        <span id="cart-badge-mobile" class="hidden absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center">0</span>
                     </button>
                     <button onclick="toggleMobileMenu()" class="text-neutral-300 hover:text-white">
                         <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
@@ -122,223 +194,270 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="md:hidden bg-neutral-900/95 backdrop-blur-md border-b border-neutral-800 mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#process" onclick="scrollToSection('process'); toggleMobileMenu(); return false;" class="block px-3 py-2 text-base font-medium hover:text-green-400">My Process</a>
-                <a href="product_details.html" class="block px-3 py-2 text-base font-medium hover:text-green-400">Shop Inventory</a>
-                <a href="#faq" onclick="scrollToSection('faq'); toggleMobileMenu(); return false;" class="block px-3 py-2 text-base font-medium hover:text-green-400">FAQ</a>
-                <a href="#contact" onclick="scrollToSection('contact'); toggleMobileMenu(); return false;" class="block px-3 py-2 text-base font-medium hover:text-green-400">Contact</a>
+        <div id="mobile-menu" class="md:hidden bg-[#0a0a0a] border-b border-white/5 mobile-menu">
+            <div class="px-4 pt-4 pb-6 space-y-4">
+                <a href="#process" onclick="scrollToSection('process'); toggleMobileMenu(); return false;" class="block text-sm font-bold uppercase tracking-widest hover:text-green-400">The Process</a>
+                <a href="product_details.html" class="block text-sm font-bold uppercase tracking-widest hover:text-green-400">Shop Inventory</a>
+                <a href="#faq" onclick="scrollToSection('faq'); toggleMobileMenu(); return false;" class="block text-sm font-bold uppercase tracking-widest hover:text-green-400">FAQ</a>
+                <a href="#contact" onclick="scrollToSection('contact'); toggleMobileMenu(); return false;" class="block text-sm font-bold uppercase tracking-widest hover:text-green-400">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <section class="relative pt-40 pb-24 lg:pt-56 lg:pb-32 overflow-hidden flex items-center min-h-[90vh]">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1508344928928-7137b29de216?auto=format&fit=crop&q=80&w=2000" alt="American Football background" class="w-full h-full object-cover opacity-10 grayscale">
-            <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/80 to-transparent"></div>
+            <!-- Subtle abstract shapes to replace basic image -->
+            <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-green-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute bottom-1/4 left-1/4 w-[30rem] h-[30rem] bg-neutral-600/10 rounded-full blur-[120px] pointer-events-none"></div>
         </div>
         
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 uppercase text-white shadow-sm animate-fade-in">
-                Stop Playing With<br/>
-                <span class="text-green-500 drop-shadow-md">Factory Wax.</span>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+            <div class="reveal inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-neutral-300 mb-10">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-bold tracking-[0.2em] uppercase">Crafted in the Garage. Built for the Gridiron.</span>
+            </div>
+            
+            <h1 class="reveal reveal-delay-1 text-6xl md:text-8xl lg:text-[8rem] leading-[0.9] font-black tracking-tighter mb-8 uppercase text-white mix-blend-difference relative">
+                Stop Playing <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">With Factory Wax.</span>
             </h1>
-            <p class="mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light animate-fade-in">
+            
+            <p class="reveal reveal-delay-2 mt-4 text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light mb-16">
                 I brush and mud condition every ball by hand. <br class="hidden md:block"/>
-                <strong class="text-white font-semibold">Certified materials. Flawless execution. Just perfection.</strong>
+                <strong class="text-white font-medium">Certified materials. Flawless execution. Just perfection.</strong>
             </p>
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-                <a href="product_details.html" class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1">
-                    Shop Now <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </a>
-                <button onclick="scrollToSection('process')" class="bg-neutral-800/50 backdrop-blur-sm border-2 border-neutral-700 hover:border-green-400 hover:text-green-400 text-white px-8 py-4 rounded-sm font-bold text-lg transition-all flex items-center justify-center">
-                    How It Works
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Value Proposition -->
-    <section class="py-20 bg-neutral-900/40 border-y border-neutral-800 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="text-center group">
-                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Owner-Prepped</h3>
-                    <p class="text-neutral-400">I touch every single football that leaves this shop. You aren't buying from a warehouse; you're buying my personal guarantee.</p>
+            
+            <div class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <div class="magnetic-wrap">
+                    <a href="product_details.html" class="magnetic bg-green-500 hover:bg-white text-black px-10 py-5 rounded-sm font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(34,197,94,0.3)]">
+                        Shop Elite <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </a>
                 </div>
-                <div class="text-center group">
-                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Zero Mistakes</h3>
-                    <p class="text-neutral-400">I have never had a bad review. My reputation is everything, so I don't ship a ball until it is absolutely perfect.</p>
-                </div>
-                <div class="text-center group">
-                    <div class="w-16 h-16 mx-auto bg-neutral-800/50 border border-neutral-700/50 rounded-xl flex items-center justify-center mb-6 group-hover:border-green-500/50 group-hover:bg-green-500/10 transition-all shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 uppercase tracking-wide text-white">Reliable Service</h3>
-                    <p class="text-neutral-400">I prioritize precision and quality so your QB has the best equipment possible, ensuring it is ready when it arrives.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Process -->
-    <section id="process" class="py-24 bg-transparent">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white drop-shadow-md">The Breakdown</h2>
-                <p class="text-xl text-neutral-400 max-w-2xl mx-auto">Certified materials. Surgical precision. Here is how I build the perfect grip.</p>
-            </div>
-
-            <div class="grid md:grid-cols-4 gap-8">
-                <!-- Step 1 -->
-                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
-                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">01</div>
-                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Prime</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">I brush the factory wax into the ball to create a tacky foundation, rather than stripping it away.</p>
-                </div>
-                <!-- Step 2 -->
-                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
-                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">02</div>
-                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Condition</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">Rich conditioning to darken the leather and improve longevity.</p>
-                </div>
-                <!-- Step 3 -->
-                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
-                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">03</div>
-                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Mud</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">Application of specific river mud blends to treat the leather and prepare the surface.</p>
-                </div>
-                <!-- Step 4 -->
-                <div class="relative p-6 bg-neutral-800/40 backdrop-blur-md border border-neutral-700/50 rounded-sm hover:border-green-500/30 hover:bg-neutral-800/60 transition-all shadow-xl">
-                    <div class="text-5xl font-black text-green-500 mb-4 drop-shadow-sm">04</div>
-                    <h4 class="text-lg font-bold text-white mb-2 uppercase">Texture</h4>
-                    <p class="text-neutral-400 text-sm leading-relaxed">Proprietary brushing technique works the wax in and blends the texture for maximum fingertip control.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Shop Section -->
-    <section id="shop" class="py-24 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mb-4 text-white">Ready To Ship</h2>
-                <p class="text-xl text-neutral-400 max-w-2xl mx-auto">I keep a limited inventory of prepped balls in stock. Order now to ensure delivery for game day.</p>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-8" id="product-grid">
-                <!-- Products injected via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Send In Your Ball Section (CENTERED) -->
-    <section id="send-in" class="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="max-w-3xl mx-auto bg-neutral-800/30 border border-neutral-700/50 rounded-sm p-12">
-                <div class="inline-flex items-center gap-2 text-green-400 font-bold uppercase text-sm tracking-wider mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                    Mail-In Service
-                </div>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-white uppercase tracking-tight mb-6">Already Have A Ball?</h2>
-                <p class="text-xl text-neutral-400 leading-relaxed mb-8">
-                    Don't let a good ball go to waste. Send in your new or lightly used Wilson or Big Game footballs, and I will apply the full GameGrip conditioning process to them.
-                </p>
-                
-                <ul class="space-y-4 text-neutral-300 inline-block text-left mb-10">
-                    <li class="flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Full Prime/Condition/Texture/Mud process
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        2-3 day turnaround time
-                    </li>
-                    <li class="flex items-center gap-3 text-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        <strong>$45.00</strong> per ball
-                    </li>
-                </ul>
-
-                <div class="pt-4">
-                    <button onclick="scrollToSection('contact'); setTimeout(() => { document.querySelector('textarea').value = 'I want to send in my own ball for conditioning.'; }, 600);" class="bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-10 py-4 font-bold uppercase text-lg transition-colors rounded-sm shadow-sm">
-                        Start Order
+                <div class="magnetic-wrap">
+                    <button onclick="scrollToSection('process')" class="magnetic bg-transparent border border-neutral-700 hover:border-white text-white px-10 py-5 rounded-sm font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center">
+                        See The Process
                     </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-neutral-900/80 border-t border-neutral-800 backdrop-blur-md">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-block p-3 rounded-full bg-neutral-800/50 mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    <!-- Marquee Banner -->
+    <div class="marquee-container py-4 relative z-10 bg-[#0a0a0a]">
+        <div class="marquee-content text-green-500/80 font-black uppercase tracking-[0.3em] text-sm flex gap-8">
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+            <span>PRECISION PREP</span> • <span>NO FACTORY WAX</span> • <span>RICH CONDITIONING</span> • <span>GAME READY GRIP</span> •
+        </div>
+    </div>
+
+    <!-- Value Proposition -->
+    <section class="py-32 relative z-10 border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+                <div class="reveal text-left group border-l border-white/10 pl-8 hover:border-green-500 transition-colors duration-500">
+                    <div class="mb-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 uppercase tracking-tight text-white">Owner-Prepped</h3>
+                    <p class="text-neutral-400 leading-relaxed font-light">I touch every single football that leaves this shop. You aren't buying from a warehouse; you're buying my personal guarantee.</p>
+                </div>
+                <div class="reveal reveal-delay-1 text-left group border-l border-white/10 pl-8 hover:border-green-500 transition-colors duration-500">
+                    <div class="mb-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 uppercase tracking-tight text-white">Zero Mistakes</h3>
+                    <p class="text-neutral-400 leading-relaxed font-light">I have never had a bad review. My reputation is everything, so I don't ship a ball until it is absolutely perfect.</p>
+                </div>
+                <div class="reveal reveal-delay-2 text-left group border-l border-white/10 pl-8 hover:border-green-500 transition-colors duration-500">
+                    <div class="mb-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 uppercase tracking-tight text-white">Reliable Service</h3>
+                    <p class="text-neutral-400 leading-relaxed font-light">I prioritize precision and quality so your QB has the best equipment possible, ensuring it is ready when it arrives.</p>
+                </div>
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4 text-white">Contact & Custom Orders</h2>
-            <p class="text-xl text-neutral-400 mb-8">Need a bulk discount for your team (6+ balls)? Have a general question about my process? Send me a message directly.</p>
-            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); showMessage('Message sent! I will get back to you shortly.');">
-                 <div class="grid grid-cols-2 gap-4">
-                   <input type="text" placeholder="Full Name" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
-                   <input type="email" placeholder="Email Address" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 transition-colors" />
+        </div>
+    </section>
+
+    <!-- The Process -->
+    <section id="process" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                <div>
+                    <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 text-white">The Blueprint</h2>
+                    <p class="text-xl text-neutral-400 max-w-xl font-light">Certified materials. Surgical precision. The 4-step architecture of the perfect grip.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Step 1 -->
+                <div class="reveal tilt-card bg-white/5 border border-white/10 rounded-sm p-8 hover:bg-white/10 transition-colors group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl font-black text-white/5 group-hover:text-green-500/10 transition-colors pointer-events-none select-none">1</div>
+                    <div class="text-green-500 font-bold tracking-widest text-xs uppercase mb-6">Phase 01</div>
+                    <h4 class="text-3xl font-black text-white mb-4 uppercase tracking-tight">Prime</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed font-light">I brush the factory wax <em>into</em> the ball to create a tacky foundation, rather than stripping it away.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="reveal reveal-delay-1 tilt-card bg-white/5 border border-white/10 rounded-sm p-8 hover:bg-white/10 transition-colors group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl font-black text-white/5 group-hover:text-green-500/10 transition-colors pointer-events-none select-none">2</div>
+                    <div class="text-green-500 font-bold tracking-widest text-xs uppercase mb-6">Phase 02</div>
+                    <h4 class="text-3xl font-black text-white mb-4 uppercase tracking-tight">Condition</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed font-light">Rich conditioning to darken the leather and improve longevity.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="reveal reveal-delay-2 tilt-card bg-white/5 border border-white/10 rounded-sm p-8 hover:bg-white/10 transition-colors group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl font-black text-white/5 group-hover:text-green-500/10 transition-colors pointer-events-none select-none">3</div>
+                    <div class="text-green-500 font-bold tracking-widest text-xs uppercase mb-6">Phase 03</div>
+                    <h4 class="text-3xl font-black text-white mb-4 uppercase tracking-tight">Mud</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed font-light">Application of specific river mud blends to treat the leather and prepare the surface.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="reveal reveal-delay-3 tilt-card bg-white/5 border border-white/10 rounded-sm p-8 hover:bg-white/10 transition-colors group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-9xl font-black text-white/5 group-hover:text-green-500/10 transition-colors pointer-events-none select-none">4</div>
+                    <div class="text-green-500 font-bold tracking-widest text-xs uppercase mb-6">Phase 04</div>
+                    <h4 class="text-3xl font-black text-white mb-4 uppercase tracking-tight">Texture</h4>
+                    <p class="text-neutral-400 text-sm leading-relaxed font-light">Proprietary brushing technique works the wax in and blends the texture for maximum fingertip control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="py-32 bg-[#050505] border-t border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal text-center mb-20 flex flex-col items-center">
+                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-white">The Arsenal</h2>
+                <div class="inline-flex items-center gap-2 text-green-400 text-xs font-bold uppercase tracking-widest bg-green-500/10 px-4 py-2 rounded-full border border-green-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Certified Materials Only
+                </div>
+            </div>
+
+            <div class="flex justify-center" id="product-grid">
+                <!-- Product injected via JS. Styled specifically for the premium feel -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Send In Your Ball Section -->
+    <section id="send-in" class="py-32 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="reveal bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-sm p-12 md:p-20 relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 text-green-400 font-bold uppercase text-xs tracking-widest mb-8 border border-green-500/30 px-3 py-1 rounded-sm">
+                        Mail-In Service
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6">Already Have A Ball?</h2>
+                    <p class="text-xl text-neutral-400 font-light mb-12 max-w-2xl mx-auto">
+                        Don't let a good ball go to waste. Send in your new or lightly used Wilson or Big Game footballs, and I will apply the full GameGrip process.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-12 border-y border-white/10 py-8">
+                        <div class="flex flex-col gap-2 border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-6">
+                            <span class="text-green-500 font-black text-xl">01.</span>
+                            <span class="text-neutral-300 font-medium text-sm">Full Prime/Condition/Mud/Texture process</span>
+                        </div>
+                        <div class="flex flex-col gap-2 border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:px-6">
+                            <span class="text-green-500 font-black text-xl">02.</span>
+                            <span class="text-neutral-300 font-medium text-sm">2-3 day turnaround time</span>
+                        </div>
+                        <div class="flex flex-col gap-2 md:pl-6">
+                            <span class="text-green-500 font-black text-xl">$45.00</span>
+                            <span class="text-neutral-300 font-medium text-sm">Flat rate per ball</span>
+                        </div>
+                    </div>
+
+                    <div class="magnetic-wrap">
+                        <button onclick="scrollToSection('contact'); setTimeout(() => { document.querySelector('textarea').value = 'I want to send in my own ball for conditioning.'; }, 600);" class="magnetic inline-block bg-white text-black hover:bg-green-500 hover:text-white px-12 py-5 font-black uppercase text-sm tracking-widest transition-colors rounded-sm">
+                            Start Mail-In Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 bg-[#050505] border-t border-white/5 relative z-10">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="reveal mb-12">
+                <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">Contact & Teams</h2>
+                <p class="text-lg text-neutral-400 font-light">Need a bulk discount for your team (6+ balls)? Have a question? Drop a line.</p>
+            </div>
+            <form class="reveal reveal-delay-1 max-w-xl mx-auto space-y-6 text-left" onsubmit="event.preventDefault(); showMessage('Message sent. Talk soon.');">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div class="space-y-2">
+                       <label class="text-xs font-bold uppercase tracking-widest text-neutral-500">Name</label>
+                       <input type="text" class="w-full bg-transparent border-b border-neutral-700 px-0 py-3 text-white placeholder-neutral-700 focus:outline-none focus:border-green-500 transition-colors font-light" />
+                   </div>
+                   <div class="space-y-2">
+                       <label class="text-xs font-bold uppercase tracking-widest text-neutral-500">Email</label>
+                       <input type="email" class="w-full bg-transparent border-b border-neutral-700 px-0 py-3 text-white placeholder-neutral-700 focus:outline-none focus:border-green-500 transition-colors font-light" />
+                   </div>
                  </div>
-                 <textarea placeholder="How can I help? (e.g. Team Quote, Shipping Question, Process Detail...)" class="w-full bg-neutral-800/50 border border-neutral-700 rounded-sm px-4 py-3 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500 h-32 transition-colors"></textarea>
-                 <button class="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white font-bold uppercase py-3 rounded-sm transition-all">
-                   Send Message
-                 </button>
+                 <div class="space-y-2 pt-4">
+                     <label class="text-xs font-bold uppercase tracking-widest text-neutral-500">Message</label>
+                     <textarea class="w-full bg-transparent border-b border-neutral-700 px-0 py-3 text-white placeholder-neutral-700 focus:outline-none focus:border-green-500 h-32 transition-colors font-light resize-none"></textarea>
+                 </div>
+                 <div class="pt-8 text-center magnetic-wrap w-full">
+                     <button class="magnetic w-full bg-neutral-800 text-white hover:bg-green-500 hover:text-black font-black uppercase text-sm tracking-widest py-5 rounded-sm transition-all">
+                       Send Message
+                     </button>
+                 </div>
             </form>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-20 bg-neutral-900/40 border-t border-neutral-800 backdrop-blur-sm">
+    <section id="faq" class="py-32 relative z-10 border-t border-white/5">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-500 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-                <h2 class="text-3xl font-extrabold uppercase tracking-tight text-white">Common Questions</h2>
+            <div class="reveal text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">Intel</h2>
             </div>
-            
-            <div class="space-y-4" id="faq-container">
-                <!-- FAQs injected via JS -->
-            </div>
+            <div class="reveal space-y-4" id="faq-container"></div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-neutral-900/90 backdrop-blur-lg py-12 border-t border-neutral-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <a href="index.html" class="flex items-center gap-3 group">
-                    <img src="logo.png" alt="" class="h-8 w-auto object-contain transition-transform group-hover:scale-105">
-                    <span class="font-bold text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
-                </a>
+    <footer class="bg-black py-16 border-t border-white/10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+                <div class="magnetic-wrap">
+                    <a href="index.html" class="magnetic flex items-center gap-3 group">
+                        <img src="logo.png" alt="" class="h-8 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display:none;" class="items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        </div>
+                        <span class="font-black text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                    </a>
+                </div>
                 
-                <div class="flex gap-6 text-sm text-neutral-400 font-medium uppercase tracking-wide">
+                <div class="flex flex-wrap justify-center gap-8 text-xs font-bold text-neutral-500 uppercase tracking-widest">
                     <a href="#contact" onclick="scrollToSection('contact'); return false;" class="hover:text-green-400 transition-colors">Team Orders</a>
                     <a href="#shop" onclick="scrollToSection('shop'); return false;" class="hover:text-green-400 transition-colors">Shop</a>
                     <a href="#contact" onclick="scrollToSection('contact'); return false;" class="hover:text-green-400 transition-colors">Contact</a>
                 </div>
             </div>
             
-            <div class="mt-8 pt-8 border-t border-neutral-800 text-center md:text-left text-sm text-neutral-500 flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; <span id="year"></span> GameGrip Footballs.</p>
-                <div class="flex items-center gap-4 mt-4 md:mt-0">
+            <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-neutral-600 font-bold uppercase tracking-widest">&copy; <span id="year"></span> GameGrip Footballs.</p>
+                <div class="flex items-center gap-3 text-xs text-neutral-600 font-bold uppercase tracking-widest">
                    <span>Secure Checkout</span>
                    <div class="h-1 w-1 rounded-full bg-green-500"></div>
-                   <span>Hand-Crafted Quality</span>
+                   <span>Garage Built</span>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
+        // --- Data ---
         const products = [
             {
                 id: 1,
@@ -356,44 +475,116 @@
             { q: "What brands do you work on?", a: "I specialize in Big Game USA and Wilson balls. Currently, I sell the Wilson GST Prime as my main offering because I believe it is the best platform for my prep process." }
         ];
 
+        // --- State ---
         let cart = [];
         let isCartOpen = false;
         let isMenuOpen = false;
         let activeFaq = null;
 
+        // --- Initialization ---
         document.getElementById('year').textContent = new Date().getFullYear();
         loadCart(); 
         renderProducts();
         renderFaqs();
         renderCart();
+        initInteractiveElements();
 
+        // --- Custom Interactive Logic ---
+        function initInteractiveElements() {
+            // 1. Mouse Spotlight Tracker
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) * 100;
+                const y = (e.clientY / window.innerHeight) * 100;
+                document.documentElement.style.setProperty('--cursor-x', x + '%');
+                document.documentElement.style.setProperty('--cursor-y', y + '%');
+            });
+
+            // 2. Scroll Reveal Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // 3. Magnetic Buttons
+            document.querySelectorAll('.magnetic').forEach(elem => {
+                elem.addEventListener('mousemove', (e) => {
+                    const rect = elem.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    elem.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                elem.addEventListener('mouseleave', () => {
+                    elem.style.transform = `translate(0px, 0px)`;
+                });
+            });
+
+            // 4. 3D Tilt Cards
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -10;
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                });
+            });
+            
+            // 5. Navbar Scrolled State
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if(window.scrollY > 50) {
+                    nav.classList.add('border-white/10', 'bg-[#0a0a0a]/95');
+                    nav.classList.remove('border-white/5', 'bg-[#0a0a0a]/80');
+                } else {
+                    nav.classList.remove('border-white/10', 'bg-[#0a0a0a]/95');
+                    nav.classList.add('border-white/5', 'bg-[#0a0a0a]/80');
+                }
+            });
+        }
+
+        // --- Core Functions ---
         function showMessage(text) {
             const box = document.getElementById('message-box');
             const boxText = document.getElementById('message-text');
             boxText.textContent = text;
             box.style.opacity = '1';
-            box.style.pointerEvents = 'auto';
+            box.style.transform = 'translateY(0) translateX(-50%)';
             setTimeout(() => {
                 box.style.opacity = '0';
-                box.style.pointerEvents = 'none';
+                box.style.transform = 'translateY(-1rem) translateX(-50%)';
             }, 3000);
         }
 
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.map(product => `
-                <div class="w-full md:max-w-lg bg-neutral-800/40 border border-neutral-700/50 backdrop-blur-md rounded-sm overflow-hidden group shadow-2xl flex flex-col hover:border-green-500/20 transition-all cursor-pointer" onclick="window.location.href='product_details.html'">
-                    <div class="relative h-80 overflow-hidden">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="reveal w-full max-w-2xl bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden group flex flex-col md:flex-row hover:border-green-500/50 transition-colors duration-500 cursor-pointer relative" onclick="window.location.href='product_details.html'">
+                    <div class="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    <div class="relative w-full md:w-1/2 aspect-square md:aspect-auto overflow-hidden bg-white/5">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                     </div>
-                    <div class="p-8 flex-1 flex flex-col text-center">
-                        <h3 class="text-3xl font-bold mb-4 uppercase text-white">${product.name}</h3>
-                        <p class="text-neutral-400 mb-6 text-base leading-relaxed">${product.description}</p>
-                        <div class="mt-auto pt-6 flex flex-col items-center gap-4 border-t border-neutral-700/50 w-full">
-                            <span class="text-4xl font-black text-white">$${product.price.toFixed(2)}</span>
-                            <button class="w-full bg-white text-neutral-900 hover:bg-green-500 hover:text-white px-8 py-4 font-bold uppercase text-lg transition-colors rounded-sm shadow-sm">
-                                View Details
-                            </button>
+                    <div class="p-8 md:p-12 w-full md:w-1/2 flex flex-col justify-center text-left relative z-10">
+                        <div class="text-green-500 font-bold tracking-widest text-xs uppercase mb-4">Official Specs</div>
+                        <h3 class="text-3xl lg:text-4xl font-black mb-4 uppercase text-white tracking-tighter">${product.name}</h3>
+                        <p class="text-neutral-400 mb-8 text-sm leading-relaxed font-light">${product.description}</p>
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="text-3xl font-black text-white">$${product.price.toFixed(2)}</span>
+                            <div class="magnetic-wrap">
+                                <button class="magnetic bg-white text-black hover:bg-green-500 hover:text-white h-12 w-12 rounded-full font-bold uppercase text-lg transition-colors flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -403,13 +594,13 @@
         function renderFaqs() {
             const container = document.getElementById('faq-container');
             container.innerHTML = faqs.map((item, i) => `
-                <div class="bg-neutral-800/40 border border-neutral-700/50 rounded-sm overflow-hidden">
-                    <button onclick="toggleFaq(${i})" class="w-full flex justify-between items-center p-4 text-left font-bold text-white hover:bg-neutral-800/50 transition-colors">
+                <div class="border-b border-white/10 last:border-0">
+                    <button onclick="toggleFaq(${i})" class="w-full flex justify-between items-center py-6 text-left font-black text-lg md:text-xl text-white hover:text-green-500 transition-colors uppercase tracking-tight group">
                         ${item.q}
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform ${activeFaq === i ? 'rotate-90' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform transition-transform duration-300 text-neutral-600 group-hover:text-green-500 ${activeFaq === i ? 'rotate-90' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                     </button>
-                    <div class="${activeFaq === i ? 'block' : 'hidden'} p-4 pt-0 text-neutral-400 text-sm leading-relaxed border-t border-neutral-800/30">
-                        <br>${item.a}
+                    <div class="overflow-hidden transition-all duration-500 ease-in-out ${activeFaq === i ? 'max-h-40 opacity-100 mb-6' : 'max-h-0 opacity-0'}">
+                        <p class="text-neutral-400 text-base font-light leading-relaxed pr-8">${item.a}</p>
                     </div>
                 </div>
             `).join('');
@@ -420,6 +611,7 @@
             renderFaqs();
         }
 
+        // Cart functions
         function loadCart() {
             const savedCart = localStorage.getItem('gamegrip_cart');
             if (savedCart) cart = JSON.parse(savedCart);
@@ -482,15 +674,13 @@
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-            if(badges[0]){
-                badges.forEach(badge => {
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.classList.remove('hidden');
-                        badge.classList.add('flex');
-                    } else badge.classList.add('hidden');
-                });
-            }
+            badges.forEach(badge => {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else badge.classList.add('hidden');
+            });
 
             if (cart.length === 0) {
                 cartItemsContainer.classList.add('hidden');
@@ -500,25 +690,24 @@
                 cartItemsContainer.classList.remove('hidden');
                 cartEmptyState.classList.add('hidden');
                 cartFooter.classList.remove('hidden');
-
                 cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="flex gap-4 bg-neutral-800/30 p-4 rounded-sm border border-neutral-800">
+                    <div class="flex gap-4 bg-white/5 p-4 rounded-sm border border-white/10 group">
                         <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-sm">
                         <div class="flex-1">
                             <div class="flex justify-between items-start mb-1">
-                                <h3 class="font-bold text-white text-sm uppercase">${item.name}</h3>
+                                <h3 class="font-black text-white text-xs uppercase tracking-widest">${item.name}</h3>
                                 <button onclick="removeFromCart(${item.id})" class="text-neutral-500 hover:text-red-500 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                                 </button>
                             </div>
                             <p class="text-green-500 font-bold text-sm mb-3">$${item.price.toFixed(2)}</p>
                             <div class="flex items-center gap-3">
-                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
                                 </button>
-                                <span class="text-sm font-medium w-4 text-center text-white">${item.quantity}</span>
-                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-white hover:bg-neutral-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                <span class="text-sm font-bold w-4 text-center text-white">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                                 </button>
                             </div>
                         </div>
@@ -528,7 +717,7 @@
             }
         }
 
-        function handleCheckout() { showMessage("Redirecting to Shopify Checkout..."); }
+        function handleCheckout() { showMessage("Redirecting to Shopify..."); }
 
         function toggleMobileMenu() {
             isMenuOpen = !isMenuOpen;
@@ -548,7 +737,12 @@
 
         function scrollToSection(id) {
             const element = document.getElementById(id);
-            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (element) {
+                const headerOffset = 100;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+            }
         }
     </script>
 </body>
