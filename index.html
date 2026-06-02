@@ -164,7 +164,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-24">
                 <div class="magnetic-wrap">
-                    <a href="index.html" class="magnetic flex items-center gap-3 group">
+                    <a href="#" onclick="window.scrollTo(0,0); return false;" class="magnetic flex items-center gap-3 group">
                         <img src="logo.png" alt="" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div style="display:none;" class="items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -183,7 +183,7 @@
                     <div class="magnetic-wrap">
                         <button onclick="toggleCart(true)" class="magnetic relative text-white hover:text-green-400 transition-colors p-2 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                            <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-black text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                            <span id="cart-badge-desktop" class="hidden absolute top-0 right-0 bg-green-500 text-black text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center">0</span>
                         </button>
                     </div>
 
@@ -337,7 +337,7 @@
         </div>
     </section>
 
-    <!-- Shop Section (Single Product View) -->
+    <!-- Shop Section (Single Product View Integrated) -->
     <section id="shop" class="py-32 bg-[#050505] border-t border-white/5 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="reveal text-center mb-16">
@@ -348,7 +348,6 @@
                 </div>
             </div>
 
-            <!-- Full Product Details embedded in main page -->
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start max-w-6xl mx-auto reveal reveal-delay-1">
                 <!-- Left: Image Gallery -->
                 <div class="space-y-4">
@@ -368,12 +367,17 @@
 
                 <!-- Right: Details -->
                 <div class="flex flex-col h-full justify-center">
-                    <p class="text-neutral-400 text-lg leading-relaxed mb-10 font-light">
+                    <p class="text-neutral-400 text-lg leading-relaxed mb-6 font-light">
                         The ultimate game ball. I start with a brand new Wilson GST Prime and apply my proprietary multi-stage conditioning process. I do not strip the ball; I brush the factory wax into the leather to create a permanent tacky foundation, then condition it for a rich, dark finish.
                     </p>
 
+                    <div class="bg-green-500/10 border border-green-500/20 p-4 rounded-sm mb-10 flex items-start gap-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <p class="text-green-100 text-sm font-medium">Includes one complimentary mid-season re-condition (we cover shipping).</p>
+                    </div>
+
                     <div class="flex items-center justify-between mb-8 pb-8 border-b border-neutral-800">
-                        <div class="text-4xl font-black text-white tracking-tight">$145.00</div>
+                        <div class="text-4xl font-black text-white tracking-tight">$165.00</div>
                     </div>
 
                     <div class="magnetic-wrap w-full">
@@ -414,8 +418,8 @@
                     <span class="text-neutral-300 font-medium text-sm leading-relaxed">2-3 day turnaround time once received</span>
                 </div>
                 <div class="flex flex-col items-center justify-center text-center bg-white/5 border border-white/10 rounded-sm p-8 hover:border-green-500/30 transition-colors">
-                    <span class="text-green-500 font-black text-4xl mb-3">$45</span>
-                    <span class="text-neutral-300 font-medium text-sm leading-relaxed">Flat rate per ball</span>
+                    <span class="text-green-500 font-black text-4xl mb-3">$65</span>
+                    <span class="text-neutral-300 font-medium text-sm leading-relaxed">Flat rate per ball<br/>(We cover shipping)</span>
                 </div>
             </div>
 
@@ -434,9 +438,9 @@
                 <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">Contact & Custom Orders</h2>
                 <p class="text-lg text-neutral-400 font-light">Need a bulk discount for your team (6+ balls)? Have a general question about my process? Drop a line.</p>
             </div>
-            <!-- WEB3FORMS INTEGRATION -->
+            
+            <!-- Web3Forms Integration -->
             <form id="contact-form" class="reveal reveal-delay-1 max-w-xl mx-auto space-y-6 text-left" onsubmit="handleContactSubmit(event)">
-                 <!-- Required Hidden Inputs for Web3Forms -->
                  <input type="hidden" name="access_key" value="63ceec03-d015-4930-92e4-0877ca244cb4">
                  <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
                  
@@ -479,7 +483,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-10">
                 <div class="magnetic-wrap">
-                    <a href="index.html" class="magnetic flex items-center gap-3 group">
+                    <a href="#" onclick="window.scrollTo(0,0); return false;" class="magnetic flex items-center gap-3 group">
                         <img src="logo.png" alt="" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div style="display:none;" class="items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -512,7 +516,7 @@
         const product = {
             id: 1,
             name: 'The GameGrip Elite',
-            price: 145.00,
+            price: 165.00,
             image: 'ball11.png',
             description: 'The ultimate game ball. Wilson GST Prime.'
         };
@@ -595,7 +599,7 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key.length === 1) { // Only track single character keys
                     keyBuffer += e.key.toLowerCase();
-                    // Keep buffer to maximum 4 characters (length of 'jazz')
+                    // Keep buffer to maximum 4 characters
                     if (keyBuffer.length > 4) {
                         keyBuffer = keyBuffer.slice(-4);
                     }
@@ -603,7 +607,7 @@
                         const audio = new Audio('jazz.mp3');
                         audio.play().catch(err => console.log('Audio play failed:', err));
                         showMessage("🎷 Smooth prep. Smooth jazz.");
-                        keyBuffer = ''; // Reset after playing
+                        keyBuffer = ''; // Reset
                     }
                 }
             });
@@ -655,7 +659,7 @@
         }
 
         function addToCart(productId) {
-            // we only have 1 product
+            // we only have 1 product, so we use the single product object
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 existingItem.quantity += 1;
@@ -755,7 +759,6 @@
                         </div>
                     </div>
                 `).join('');
-                
                 cartTotalEl.textContent = `$${total.toFixed(2)}`;
             }
         }
@@ -796,7 +799,7 @@
                 });
 
                 if (productRes.status === 401) {
-                    throw new Error("401 Unauthorized: Shopify rejected your token.");
+                    throw new Error("401 Unauthorized: Shopify rejected your token. Ensure you copied the 'Storefront API access token'.");
                 }
                 
                 const productData = await productRes.json();
@@ -807,7 +810,7 @@
                 }
 
                 if (!productData.data || !productData.data.products.edges.length) {
-                    throw new Error("No products found.");
+                    throw new Error("No products found. Check that your product status is 'Active' and published to the 'GameGrip Website' sales channel.");
                 }
                 
                 const variantId = productData.data.products.edges[0].node.variants.edges[0].node.id;
@@ -850,6 +853,7 @@
                 const cartData = await cartRes.json();
                 
                 if (cartData.data?.cartCreate?.cart?.checkoutUrl) {
+                    // Redirect to secure Shopify checkout!
                     window.location.href = cartData.data.cartCreate.cart.checkoutUrl;
                 } else {
                     console.error("Cart generation errors:", cartData.data?.cartCreate?.userErrors);
@@ -880,7 +884,6 @@
             btn.innerHTML = "Sending...";
             btn.disabled = true;
 
-            // Form data needs to be parsed as JSON as requested by Web3Forms documentation
             const formData = new FormData(form);
             const object = Object.fromEntries(formData);
             const json = JSON.stringify(object);
