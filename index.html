@@ -164,7 +164,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-24">
                 <div class="magnetic-wrap">
-                    <a href="#" onclick="window.scrollTo(0,0); return false;" class="magnetic flex items-center gap-3 group">
+                    <a href="index.html" class="magnetic flex items-center gap-3 group">
                         <img src="logo.png" alt="" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div style="display:none;" class="items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -197,7 +197,7 @@
                 <div class="md:hidden flex items-center gap-6">
                     <button onclick="toggleCart(true)" class="relative text-white hover:text-green-400 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                        <span id="cart-badge-mobile" class="hidden absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                        <span id="cart-badge-mobile" class="hidden absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center">0</span>
                     </button>
                     <button onclick="toggleMobileMenu()" class="text-neutral-300 hover:text-white">
                         <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
@@ -337,7 +337,7 @@
         </div>
     </section>
 
-    <!-- Shop Section (Single Product View Integrated) -->
+    <!-- Shop Section (Single Product View) -->
     <section id="shop" class="py-32 bg-[#050505] border-t border-white/5 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="reveal text-center mb-16">
@@ -483,7 +483,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-10">
                 <div class="magnetic-wrap">
-                    <a href="#" onclick="window.scrollTo(0,0); return false;" class="magnetic flex items-center gap-3 group">
+                    <a href="index.html" class="magnetic flex items-center gap-3 group">
                         <img src="logo.png" alt="" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div style="display:none;" class="items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -505,6 +505,7 @@
                    <div class="flex gap-4">
                        <a href="terms.html" class="hover:text-white transition-colors">Terms</a>
                        <a href="privacy.html" class="hover:text-white transition-colors">Privacy</a>
+                       <a href="shipping.html" class="hover:text-white transition-colors">Shipping & Returns</a>
                    </div>
                    <div class="h-1 w-1 rounded-full bg-neutral-600 hidden md:block"></div>
                    <span class="hidden md:inline">Secure Checkout</span>
@@ -602,7 +603,7 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key.length === 1) { // Only track single character keys
                     keyBuffer += e.key.toLowerCase();
-                    // Keep buffer to maximum 4 characters
+                    // Keep buffer to maximum 4 characters (length of 'jazz')
                     if (keyBuffer.length > 4) {
                         keyBuffer = keyBuffer.slice(-4);
                     }
@@ -610,7 +611,7 @@
                         const audio = new Audio('jazz.mp3');
                         audio.play().catch(err => console.log('Audio play failed:', err));
                         showMessage("🎷 Smooth prep. Smooth jazz.");
-                        keyBuffer = ''; // Reset
+                        keyBuffer = ''; // Reset after playing
                     }
                 }
             });
@@ -662,7 +663,7 @@
         }
 
         function addToCart(productId) {
-            // we only have 1 product, so we use the single product object
+            // we only have 1 product
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 existingItem.quantity += 1;
@@ -762,6 +763,7 @@
                         </div>
                     </div>
                 `).join('');
+                
                 cartTotalEl.textContent = `$${total.toFixed(2)}`;
             }
         }
@@ -802,7 +804,7 @@
                 });
 
                 if (productRes.status === 401) {
-                    throw new Error("401 Unauthorized: Shopify rejected your token. Ensure you copied the 'Storefront API access token'.");
+                    throw new Error("401 Unauthorized: Shopify rejected your token.");
                 }
                 
                 const productData = await productRes.json();
@@ -813,7 +815,7 @@
                 }
 
                 if (!productData.data || !productData.data.products.edges.length) {
-                    throw new Error("No products found. Check that your product status is 'Active' and published to the 'GameGrip Website' sales channel.");
+                    throw new Error("No products found.");
                 }
                 
                 const variantId = productData.data.products.edges[0].node.variants.edges[0].node.id;
@@ -856,7 +858,6 @@
                 const cartData = await cartRes.json();
                 
                 if (cartData.data?.cartCreate?.cart?.checkoutUrl) {
-                    // Redirect to secure Shopify checkout!
                     window.location.href = cartData.data.cartCreate.cart.checkoutUrl;
                 } else {
                     console.error("Cart generation errors:", cartData.data?.cartCreate?.userErrors);
