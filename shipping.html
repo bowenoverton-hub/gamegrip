@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-neutral-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping & Returns - GameGrip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+        }
+
+        .selection-green::selection { background-color: #22c55e; color: white; }
+        
+        /* Tactile Noise Overlay */
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+        
+        h1, h2, h3 { font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; }
+        h2 { margin-top: 3rem; margin-bottom: 1rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; color: #d4d4d4; font-size: 1.1rem; }
+        p, li { color: #a3a3a3; margin-bottom: 1rem; line-height: 1.7; font-weight: 300; }
+        ul { margin-bottom: 1.5rem; padding-left: 1.5rem; list-style-type: disc; color: #a3a3a3; }
+        a { color: #22c55e; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="text-neutral-100 selection-green relative flex flex-col min-h-screen">
+
+    <div class="bg-noise"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <img src="logo.png" alt="GameGrip" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none;" class="items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    </div>
+                    <span class="font-black text-2xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="index.html" class="text-xs font-bold uppercase tracking-widest text-neutral-400 hover:text-green-400 transition-colors">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-40 pb-24 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-5xl md:text-6xl text-white mb-8">Shipping, Returns & Service Policies</h1>
+            <p class="text-sm font-bold uppercase tracking-widest text-green-500 mb-12">Last Updated: June 2026</p>
+
+            <div class="prose prose-invert max-w-none">
+                
+                <h2>1. Shipping Policy & Turnaround Times</h2>
+                <p>Because every ball is conditioned and prepped by hand, fulfillment times vary based on the specific service or product you purchase:</p>
+                <ul>
+                    <li><strong>In-Stock GameGrip Elite Footballs:</strong> Inventory listed as "Ready To Ship" will be processed and shipped within 1 to 2 business days.</li>
+                    <li><strong>Mail-In Service:</strong> Turnaround time is approximately 2 to 3 business days <em>after</em> we physically receive your football at our shop.</li>
+                    <li><strong>Custom Team Orders:</strong> Bulk orders take longer due to the volume of hand-prep required. Expect 3 to 5 business days for fulfillment.</li>
+                </ul>
+                <p><strong>Lost or Stolen Packages:</strong> Once a package is handed over to the shipping carrier (USPS, UPS, FedEx), GameGrip is not liable for items lost, damaged, or stolen in transit. For Mail-In services, you are fully responsible for ensuring your un-prepped ball arrives safely to our facility.</p>
+
+                <h2>2. Return & Refund Policy</h2>
+                <p>Due to the highly customized, labor-intensive nature of our conditioning process, we enforce a strict return policy.</p>
+                <ul>
+                    <li><strong>All Sales Are Final on Prepped Footballs.</strong> Once a ball has been shipped to you and used on the field, it cannot be returned or exchanged under any circumstances.</li>
+                    <li><strong>Unused Returns:</strong> If you receive your GameGrip Elite ball and decide you do not want it, you may return it within 7 days of delivery <strong>only if it remains completely unused and un-thrown.</strong> The customer is responsible for return shipping costs, and a 15% restocking fee may apply.</li>
+                    <li><strong>Mail-In Service Fees:</strong> The $65 flat rate fee for the Mail-In service is completely non-refundable once the conditioning process has begun on your football.</li>
+                </ul>
+
+                <h2>3. Mail-In Service Liability Waiver</h2>
+                <p>By purchasing the Mail-In Service and sending us a new or used football, you agree to the following terms:</p>
+                <ul>
+                    <li>You acknowledge that our service covers surface conditioning, mudding, and texturing. It is <strong>not</strong> a structural repair service.</li>
+                    <li>GameGrip cannot fix pre-existing damage (e.g., popped bladders, torn laces, severely waterlogged leather, or deep scuffs).</li>
+                    <li>GameGrip is not liable for underlying, unseen defects in the leather of your personal football that may become apparent during the brushing and conditioning process.</li>
+                </ul>
+
+                <h2>4. Complimentary Mid-Season Re-Conditioning Rules</h2>
+                <p>Purchases of "The GameGrip Elite" include one (1) complimentary mid-season re-conditioning service, subject to the following rules to prevent abuse:</p>
+                <ul>
+                    <li><strong>Time Limit:</strong> This perk must be redeemed within exactly one (1) year from the original date of purchase.</li>
+                    <li><strong>Coverage:</strong> The service covers standard surface re-tacking and conditioning required after normal field wear and tear. It strictly <strong>does not</strong> cover structural damage, bladder replacement, separated panels, or excessive damage caused by submersion in water/mud or dogs.</li>
+                    <li><strong>Non-Transferable:</strong> The re-condition perk applies only to the exact football originally purchased and is tied to the original order number and buyer.</li>
+                    <li><strong>How to Claim:</strong> To claim your free re-condition, email us at <strong>bowen@gamegrip.co</strong> with your original order number. We will email you a prepaid return shipping label. GameGrip covers standard shipping both ways.</li>
+                </ul>
+
+                <h2>5. Contact Us</h2>
+                <p>If you have any questions regarding your order, shipping, or returns, please contact us immediately at <strong>bowen@gamegrip.co</strong>.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-white/10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <img src="logo.png" alt="GameGrip" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none;" class="items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    </div>
+                    <span class="font-black text-xl tracking-tighter uppercase text-white">Game<span class="text-green-500">Grip</span></span>
+                </a>
+                
+                <div class="flex flex-wrap justify-center gap-8 text-xs font-bold text-neutral-500 uppercase tracking-widest">
+                    <a href="index.html#contact" class="hover:text-green-400 transition-colors">Team Orders</a>
+                    <a href="index.html#shop" class="hover:text-green-400 transition-colors">Shop</a>
+                    <a href="index.html#contact" class="hover:text-green-400 transition-colors">Contact</a>
+                </div>
+            </div>
+            
+            <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-neutral-600 font-bold uppercase tracking-widest">&copy; <span id="year"></span> GameGrip Footballs.</p>
+                <div class="flex items-center gap-6 text-xs text-neutral-600 font-bold uppercase tracking-widest">
+                   <div class="flex gap-4">
+                       <a href="terms.html" class="hover:text-white transition-colors">Terms</a>
+                       <a href="privacy.html" class="hover:text-white transition-colors">Privacy</a>
+                       <a href="shipping.html" class="hover:text-white transition-colors">Shipping & Returns</a>
+                   </div>
+                   <div class="h-1 w-1 rounded-full bg-neutral-600 hidden md:block"></div>
+                   <span class="hidden md:inline">Secure Checkout</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
