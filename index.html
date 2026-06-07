@@ -160,6 +160,13 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '924363657327200');
 fbq('track', 'PageView');
+fbq('track', 'ViewContent', {
+  content_name: 'The GameGrip Elite',
+  content_ids: [1],
+  content_type: 'product',
+  value: 165.00,
+  currency: 'USD'
+});
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=924363657327200&ev=PageView&noscript=1"
@@ -733,6 +740,14 @@ src="https://www.facebook.com/tr?id=924363657327200&ev=PageView&noscript=1"
             saveCart();
             renderCart();
             toggleCart(true);
+            // Meta Pixel: track add to cart
+            if (window.fbq) fbq('track', 'AddToCart', {
+                content_name: product.name,
+                content_ids: [product.id],
+                content_type: 'product',
+                value: product.price,
+                currency: 'USD'
+            });
         }
 
         function removeFromCart(productId) {
@@ -829,6 +844,16 @@ src="https://www.facebook.com/tr?id=924363657327200&ev=PageView&noscript=1"
         }
 
         async function handleShopifyCheckout() {
+            // Meta Pixel: signal checkout intent before redirecting to Shopify's hosted checkout.
+            // (The Purchase event itself fires on Shopify's side via the Meta sales channel + CAPI.)
+            const ico_total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const ico_qty = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (window.fbq) fbq('track', 'InitiateCheckout', {
+                value: ico_total,
+                currency: 'USD',
+                num_items: ico_qty
+            });
+
             const btn = document.getElementById('checkout-btn');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<span class="relative z-10">Securing Checkout...</span><div class="absolute inset-0 bg-green-400 transform scale-x-100 z-0"></div>';
@@ -967,6 +992,8 @@ src="https://www.facebook.com/tr?id=924363657327200&ev=PageView&noscript=1"
                 if (response.status === 200) {
                     showMessage("Message sent! I'll get back to you shortly.");
                     form.reset();
+                    // Meta Pixel: track contact / lead submission
+                    if (window.fbq) fbq('track', 'Lead');
                 } else {
                     console.error(result);
                     showMessage(result.message || "Something went wrong. Please try again.");
